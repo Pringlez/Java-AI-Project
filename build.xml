@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ===================================================================================
+     GALWAY-MAYO INSTITUTE OF TECHNOLOGY 
+     
+     Copyright 2016. 		John Walsh
+     						B.Sc. (Hons) in Software Development
+							g00299626@gmit.ie
+     						Artificial Intelligence Maze Game 
+     						
+     						Java AI Maze Game
+	 
+     =================================================================================== -->
+<project name="aoodpp" default="deploy">
+    <description>
+		B.Sc. Software Development – Artificial Intelligence Maze Game (2016)  
+        2016 Assignment - Java AI Maze Game
+    </description>
+	
+	<!-- Declare global properties (name/value pairs) for this build -->
+
+	<property name="user.id" value="G00299626"/>
+	<property name="user.name" value="John"/>
+	
+	<property name="org.name" value="Galway-Mayo Institute of Technology"/>
+	<property name="app.name" value="Java AI Maze Game"/>
+	<property name="app.version" value="1.0"/>
+	<property name="app.version.name" value="Scarab"/>
+	<property name="jre.target" value="1.5"/>
+    <property name="lib.dir" value="./lib"/>
+	<property name="srcDir" value="./src/"/>
+	<property name="distDir" value="./dist"/>
+	<property name="docDir" value="${distDir}/docs"/>
+    
+    <path id="classpath">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+  	
+	<echo>
+	    ----------------------------------------------------------------------------
+		Application: ${app.name} ${app.version}
+	    Build File : ${ant.file} 
+	    Run Date   : ${build.time}
+	    Run by     : ${user.name}
+	    Base Dir   : ${basedir}
+	    Java Home  : ${java.home}
+	    ----------------------------------------------------------------------------
+  	</echo>
+	
+    <mkdir dir="dist"/>
+	
+	<!-- Delete any previously created directories and files -->
+    <target name="clean">
+    	<delete dir="${docDir}"/>
+    	<delete> 
+    	    <fileset dir="${distDir}" includes="**/*"/> 
+    	</delete> 
+    </target>
+	
+	<!-- Initialisation task -->
+    <target name="init" depends="clean">
+		<tstamp/>
+    	<mkdir dir="${distDir}"/>
+	</target>	
+    
+	<!-- Compile source code -->
+	<target name="compile" depends="init">
+		<javac includeantruntime="false" target="${jre.target}" source="${jre.target}" srcdir="${srcDir}" destdir="${distDir}">
+		    <classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<!-- Create Java application archive (Jar) -->
+	<target name="archive" depends="compile">
+        <jar destfile="${distDir}/mazegame.jar" basedir="${distDir}" excludes="**/*Test.class, **/Compact*.class ">
+             <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
+        	 <manifest>
+        	 	<attribute name="Main-Class" value="ie.gmit.sw.Runner"/>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Implementation-Vendor" value="${org.name}"/>
+				<attribute name="Implementation-Title" value="${app.name}"/>
+				<attribute name="Implementation-Version" value="${app.version}"/>
+			</manifest>
+        </jar>
+    </target>
+	
+	<!-- Generate JavaDocs -->
+    <target name="docs" depends="archive">
+        <javadoc sourcepath="${srcDir}" destdir="${docDir}" author="true" version="true" use="true" windowtitle="Java AI Maze Game" classpathref="classpath">
+            <doctitle><![CDATA[<h1>Java AI Maze Game</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright &#169; 2016</i>]]></bottom>
+        </javadoc>
+    </target>
+	
+    
+	<!-- Compress classes and documentation into Zip and compressed tarball -->
+	<target name="deploy" depends="docs">
+		<tar destfile="${distDir}/${user.id}.tar.gz" basedir="${distDir}" includes="*" compression="gzip"/> 
+		<zip destfile="${distDir}/${user.id}.zip" basedir="${distDir}"/>
+    </target>
+</project>
