@@ -25,7 +25,7 @@
 	<property name="app.name" value="Java AI Maze Game"/>
 	<property name="app.version" value="1.0"/>
 	<property name="app.version.name" value="Scarab"/>
-	<property name="jre.target" value="1.5"/>
+	<property name="jre.target" value="1.8"/>
     <property name="lib.dir" value="./lib"/>
 	<property name="srcDir" value="./src/"/>
 	<property name="distDir" value="./dist"/>

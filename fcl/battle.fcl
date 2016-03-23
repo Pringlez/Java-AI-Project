@@ -1,0 +1,57 @@
+/*
+	This is the battle fuzzy logic file, which determines how well you deal with an enemies.
+	For instance if your character is unarmed and you have full health, will you survive the encounter?
+	How much health will you lose? Or will you die?
+*/
+
+FUNCTION_BLOCK battle	// Block definition (there may be more than one block per file)
+
+VAR_INPUT				// Define input variables
+	health : REAL;
+	armor : REAL;
+	weapon : REAL;
+END_VAR
+
+VAR_OUTPUT				// Define output variable
+	survivability : REAL;
+END_VAR
+
+FUZZIFY health			// health input variable 'health': {'poor', 'good' , 'excellent'}
+	TERM poor := (0, 1) (30, 0) ; 
+	TERM good := (35, 0) (45,1) (60,1) (90,0);
+	TERM excellent := (70, 0) (90, 1);
+END_FUZZIFY
+
+FUZZIFY armor			// armor input variable 'armor': {'poor', 'good' , 'excellent'}
+	TERM poor := (0, 1) (30, 0) ; 
+	TERM good := (35, 0) (45,1) (60,1) (90,0);
+	TERM excellent := (70, 0) (90, 1);
+END_FUZZIFY
+
+FUZZIFY weapon			// weapon input variable 'weapon': {'damaged', 'sharp' , 'deadly'}
+	TERM damaged := (0, 1) (10, 1) ; 
+	TERM sharp := (35, 0) (45,1) (60,1) (75,0);
+	TERM deadly := (70, 0) (80, 1) (90, 1);
+END_FUZZIFY
+
+DEFUZZIFY survivability			// Output variable 'survivability' : {'bad', 'fine', 'great' }
+	TERM bad := (0,0) (25,1) (35,0);
+	TERM fine := (35,0) (50,1) (75,0);
+	TERM great := (75,0) (90,1) (100,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
+	ACT : MIN;			// Use 'min' activation method
+	ACCU : MAX;			// Use 'max' accumulation method
+
+	RULE 1 : IF health IS poor OR armor IS poor THEN survivability IS bad;
+	RULE 2 : IF armor IS excellent THEN survivability IS fine;
+	RULE 3 : IF weapon IS sharp OR armor IS good THEN survivability IS fine;
+	RULE 4 : IF health IS good OR armor IS good AND weapon IS deadly THEN survivability IS great;
+	RULE 5 : IF weapon IS damaged AND health IS good OR armor IS good THEN survivability IS bad;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

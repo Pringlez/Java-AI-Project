@@ -1,25 +1,32 @@
 package ie.gmit.sw.ai;
 
+import java.awt.Color;
+import java.util.Random;
+
 public class Maze {
 	
-	private char[][] maze;
+	private Node[][] maze;
+	private Node goal;
 	
 	public Maze(int rows, int cols){
-		maze = new char[rows][cols];
+		maze = new Node[rows][cols];
 		init();
 		buildMaze();
-		
-		int featureNumber = (int)((rows * cols) * 0.01);
-		addFeature('W', 'X', featureNumber);
-		addFeature('?', 'X', featureNumber);
-		addFeature('B', 'X', featureNumber);
-		addFeature('H', 'X', featureNumber);
+		buildPaths();
+		setGoalNode();
+		unvisit();
+		addFeature('W', 'X', (int)((rows * cols) * 0.01));
+		addFeature('?', 'X', (int)((rows * cols) * 0.01));
+		addFeature('B', 'X', (int)((rows * cols) * 0.01));
+		addFeature('H', 'X', (int)((rows * cols) * 0.01));
 	}
 	
 	private void init(){
 		for (int row = 0; row < maze.length; row++){
 			for (int col = 0; col < maze[row].length; col++){
-				maze[row][col] = 'X';
+				maze[row][col] = new Node(row, col);
+				maze[row][col].setNodeType('X');
+				maze[row][col].setWalkable(false);
 			}
 		}
 	}
@@ -30,8 +37,8 @@ public class Maze {
 			int row = (int) (maze.length * Math.random());
 			int col = (int) (maze[0].length * Math.random());
 			
-			if (maze[row][col] == replace){
-				maze[row][col] = feature;
+			if (maze[row][col].getNodeType() == replace){
+				maze[row][col].nodeType = feature;
 				counter++;
 			}
 		}
@@ -42,17 +49,79 @@ public class Maze {
 			for (int col = 0; col < maze[row].length - 1; col++){
 				int num = (int) (Math.random() * 10);
 				if (num >= 5 && col + 1 < maze[row].length - 1){
-					maze[row][col + 1] = ' ';
+					// When char is set to ' ' this means its a free path or area to walk
+					maze[row][col + 1].setNodeType(' ');
+					maze[row][col + 1].walkable = true;
 					continue;
 				}
 				if (row + 1 < maze.length){ //Check south
-					maze[row + 1][col] = ' ';
-				}				
+					maze[row + 1][col].setNodeType(' ');
+					maze[row + 1][col].walkable = true;
+				}
 			}
 		}	
 	}
 	
-	public char[][] getMaze(){
+	private void buildPaths(){
+		for (int row = 0; row < maze.length; row++){
+			for (int col = 0; col < maze[row].length - 1; col++){
+				try {
+					if(maze[row][col + 1].isWalkable()){
+						maze[row][col].addPath(Node.Direction.West);
+					}
+				} catch (Exception e) {
+				}
+				try {
+					if(maze[row][col - 1].isWalkable()){
+						maze[row][col].addPath(Node.Direction.East);
+					}
+				} catch (Exception e) {
+				}
+				try {
+					if(maze[row + 1][col].isWalkable()){
+						maze[row][col].addPath(Node.Direction.North);
+					}
+				} catch (Exception e) {
+				}
+				try {
+					if(maze[row - 1][col].isWalkable()){
+						maze[row][col].addPath(Node.Direction.South);
+					}
+				} catch (Exception e) {
+				}
+			}
+		}
+	}
+	
+	public void setGoalNode() {
+		Random generator = new Random();
+		boolean goalSet = false;
+		while(goalSet != true){
+			int randRow = generator.nextInt(maze.length);
+			int randCol = generator.nextInt(maze[0].length);
+			if(maze[randRow][randCol].isWalkable()){
+				maze[randRow][randCol].setGoalNode(true);
+				goal = maze[randRow][randCol];
+				goalSet = true;
+			}
+		}
+	}
+	
+	protected void unvisit(){
+		for (int i = 0; i < maze.length; i++){
+			for (int j = 0; j < maze[i].length; j++){
+				maze[i][j].setVisited(false);
+				maze[i][j].setParent(null);
+				maze[i][j].setColor(Color.LIGHT_GRAY);
+			}
+		}
+	}
+	
+	public Node getGoalNode(){
+		return this.goal;
+	}
+	
+	public Node[][] getMaze(){
 		return this.maze;
 	}
 	

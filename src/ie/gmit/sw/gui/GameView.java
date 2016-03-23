@@ -6,23 +6,26 @@ import java.awt.image.*;
 import javax.imageio.*;
 import javax.swing.*;
 
+import ie.gmit.sw.ai.Node;
+
 public class GameView extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 	public static final int DEFAULT_VIEW_SIZE = 800;	
-	private static final int IMAGE_COUNT = 7;
+	private static final int IMAGE_COUNT = 11;
 	private int cellspan = 5;	
 	private int cellpadding = 2;
-	private char[][] maze;
+	private Node[][] maze;
 	private BufferedImage[] images;
-	private int enemy_state = 5;
+	private int player_state = 5;
+	private int enemy_state = 7;
 	private Timer timer;
 	private int currentRow;
 	private int currentCol;
 	private boolean zoomOut = false;
 	private int imageIndex = -1;
 	
-	public GameView(char[][] maze) throws Exception{
+	public GameView(Node[][] maze) throws Exception {
 		init();
 		this.maze = maze;
 		setBackground(Color.LIGHT_GRAY);
@@ -65,31 +68,34 @@ public class GameView extends JPanel implements ActionListener {
         		int y1 = row * size;
         		
         		char ch = 'X';
-       		
+        		
+        		ch = maze[row][col].getNodeType();
+        		
         		if (zoomOut){
-        			ch = maze[row][col];
+        			//ch = maze[row][col].getNodeType();
         			if (row == currentRow && col == currentCol){
-        				g2.setColor(Color.YELLOW);
+        				g2.setColor(Color.PINK);
         				g2.fillRect(x1, y1, size, size);
         				continue;
         			}
         		}else{
-        			ch = maze[currentRow - cellpadding + row][currentCol - cellpadding + col];
+        			ch = maze[currentRow - cellpadding + row][currentCol - cellpadding + col].getNodeType();
         		}
         		
-        		
         		if (ch == 'X'){        			
-        			imageIndex = 0;;
+        			imageIndex = 0;
         		}else if (ch == 'W'){
-        			imageIndex = 1;;
+        			imageIndex = 1;
         		}else if (ch == '?'){
-        			imageIndex = 2;;
+        			imageIndex = 2;
         		}else if (ch == 'B'){
-        			imageIndex = 3;;
+        			imageIndex = 3;
         		}else if (ch == 'H'){
-        			imageIndex = 4;;
+        			imageIndex = 4;
         		}else if (ch == 'E'){
-        			imageIndex = enemy_state;;       			
+        			imageIndex = enemy_state;
+        		}else if (ch == 'P'){
+            		imageIndex = player_state;
         		}else{
         			imageIndex = -1;
         		}
@@ -99,7 +105,17 @@ public class GameView extends JPanel implements ActionListener {
         		}else{
         			g2.setColor(Color.LIGHT_GRAY);
         			g2.fillRect(x1, y1, size, size);
-        		}      		
+        		}
+        		
+        		if (maze[row][col].isVisited() && !maze[row][col].isGoalNode() && maze[row][col].isWalkable()){
+        			g2.setColor(maze[row][col].getColor());
+        			g2.fillRect(x1, y1, size, size);
+        		}
+        		
+       			if (maze[row][col].isGoalNode()){
+       				g2.setColor(Color.GREEN);
+       				g2.fillRect(x1, y1, size, size);
+       			}
         	}
         }
 	}
@@ -108,13 +124,21 @@ public class GameView extends JPanel implements ActionListener {
 		zoomOut = !zoomOut;		
 	}
 
-	public void actionPerformed(ActionEvent e) {	
-		if (enemy_state < 0 || enemy_state == 5){
-			enemy_state = 6;
+	public void actionPerformed(ActionEvent e) {
+		if (player_state < 0 || player_state == 5){
+			player_state = 6;
 		}else{
-			enemy_state = 5;
+			player_state = 5;
 		}
-		this.repaint();
+		if (enemy_state < 0 || enemy_state == 7){
+			enemy_state = 8;
+		}else{
+			enemy_state = 7;
+		}
+		
+		if(e.getSource() == timer){
+			 repaint();
+		}
 	}
 	
 	private void init() throws Exception{
@@ -124,7 +148,11 @@ public class GameView extends JPanel implements ActionListener {
 		images[2] = ImageIO.read(new java.io.File("res/help.png"));
 		images[3] = ImageIO.read(new java.io.File("res/bomb.png"));
 		images[4] = ImageIO.read(new java.io.File("res/h_bomb.png"));
-		images[5] = ImageIO.read(new java.io.File("res/spider_down.png"));
-		images[6] = ImageIO.read(new java.io.File("res/spider_up.png"));
+		images[5] = ImageIO.read(new java.io.File("res/player_down.png"));
+		images[6] = ImageIO.read(new java.io.File("res/player_up.png"));
+		images[7] = ImageIO.read(new java.io.File("res/spider_down.png"));
+		images[8] = ImageIO.read(new java.io.File("res/spider_up.png"));
+		images[9] = ImageIO.read(new java.io.File("res/visited.png"));
+		images[10] = ImageIO.read(new java.io.File("res/path.png"));
 	}
 }
