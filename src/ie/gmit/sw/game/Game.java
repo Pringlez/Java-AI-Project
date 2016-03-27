@@ -1,5 +1,10 @@
 package ie.gmit.sw.game;
 
+/**  
+* Game.java - The game class containing mixed attributes for the game
+* @author John Walsh
+* @version 1.0
+*/
 public class Game {
 
 	private int mazeExitGoals;

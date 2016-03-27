@@ -1,7 +1,14 @@
-package ie.gmit.sw.ai;
+package ie.gmit.sw.game;
 
+/**  
+* Maze.java - The maze class containing attributes for the maze game generation and setup
+* @author John Walsh
+* @version 1.0
+*/
 import java.awt.Color;
 import java.util.Random;
+
+import ie.gmit.sw.ai.Node;
 
 public class Maze {
 	

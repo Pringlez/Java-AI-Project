@@ -1,7 +1,16 @@
 package ie.gmit.sw.game;
 
+/**  
+* Player.java - The player class containing attributes for player objects
+* @author John Walsh
+* @version 1.0
+* @see Base
+*/
 public class Player extends Base {
 
+	private int score;
+	private int stepsToExit;
+	private int steps;
 	private int special;
 	private String weapon;
 	private int searchCount;
@@ -12,6 +21,30 @@ public class Player extends Base {
 	
 	public Player(int health, int armor) {
 		super(health, armor);
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getStepsToExit() {
+		return stepsToExit;
+	}
+
+	public void setStepsToExit(int stepsToExit) {
+		this.stepsToExit = stepsToExit;
+	}
+
+	public int getSteps() {
+		return steps;
+	}
+
+	public void setSteps(int steps) {
+		this.steps = steps;
 	}
 
 	public int getSpecial() {

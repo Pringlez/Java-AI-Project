@@ -2,6 +2,11 @@ package ie.gmit.sw.ai;
 
 import java.awt.Color;
 
+/**  
+* TraversatorStats.java - This class handles displaying info about the goals path
+* @author John Walsh
+* @version 1.0
+*/
 public class TraversatorStats {
 	
 	private static boolean debug = false;

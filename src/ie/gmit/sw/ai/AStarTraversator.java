@@ -1,20 +1,23 @@
 package ie.gmit.sw.ai;
 
-import java.awt.Color;
 import java.util.*;
 
-public class AStarTraversator implements Traversator {
+/**  
+* AStarTraversator.java - The A* algorithm class, used for traversing the maze to locate the goal node
+* @author John Walsh
+* @version 1.0 
+* @see Traversator
+*/
+public class AStarTraversator extends Utility implements Traversator {
+	
 	private Node goal;
 	
 	public AStarTraversator(Node goal){
 		this.goal = goal;
 	}
 	
-	public void traverse(Node[][] maze, Node node, boolean cleanMaze) {
-		
-		if(cleanMaze)
-			mazeCleaner(maze);
-		
+	public void traverse(Node[][] maze, Node node){
+		unvisit(maze);
         long time = System.currentTimeMillis();
     	int visitCount = 0;
     	
@@ -35,11 +38,8 @@ public class AStarTraversator implements Traversator {
 				break;
 			}
 			
-			/*try { //Simulate processing each expanded node
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
+			// Sleep for x amount of seconds
+			//sleep(1);
 			
 			//Process adjacent nodes
 			Node[] children = node.children(maze);
@@ -58,16 +58,6 @@ public class AStarTraversator implements Traversator {
 					open.add(child);
 				}
 			}									
-		}
-	}
-	
-	private void mazeCleaner(Node[][] maze){
-		for (int i = 0; i < maze.length; i++){
-			for (int j = 0; j < maze[i].length; j++){
-				maze[i][j].setVisited(false);
-				maze[i][j].setParent(null);
-				maze[i][j].setColor(Color.LIGHT_GRAY);
-			}
 		}
 	}
 }

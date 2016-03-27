@@ -2,6 +2,11 @@ package ie.gmit.sw.ai;
 
 import java.awt.Color;
 
+/**  
+* Node.java - The node class is responsible for keeping track of individual nodes in the maze
+* @author John Walsh
+* @version 1.0
+*/
 public class Node {
 	
 	public enum Direction {North, South, East, West};

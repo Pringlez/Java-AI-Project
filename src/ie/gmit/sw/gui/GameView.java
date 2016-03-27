@@ -8,11 +8,16 @@ import javax.swing.*;
 
 import ie.gmit.sw.ai.Node;
 
+/**  
+* GameView.java - The game view class handles all the image manipulation and drawing
+* @author John Walsh
+* @version 1.0
+*/
 public class GameView extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 	public static final int DEFAULT_VIEW_SIZE = 800;	
-	private static final int IMAGE_COUNT = 11;
+	private static final int IMAGE_COUNT = 9;
 	private int cellspan = 5;	
 	private int cellpadding = 2;
 	private Node[][] maze;
@@ -72,9 +77,13 @@ public class GameView extends JPanel implements ActionListener {
         		ch = maze[row][col].getNodeType();
         		
         		if (zoomOut){
-        			//ch = maze[row][col].getNodeType();
+        			if(ch == 'E'){
+        				g2.setColor(Color.RED);
+    					g2.fillRect(x1, y1, size, size);
+    					//continue;
+        			}
         			if (row == currentRow && col == currentCol){
-        				g2.setColor(Color.PINK);
+        				g2.setColor(Color.ORANGE);
         				g2.fillRect(x1, y1, size, size);
         				continue;
         			}
@@ -152,7 +161,5 @@ public class GameView extends JPanel implements ActionListener {
 		images[6] = ImageIO.read(new java.io.File("res/player_up.png"));
 		images[7] = ImageIO.read(new java.io.File("res/spider_down.png"));
 		images[8] = ImageIO.read(new java.io.File("res/spider_up.png"));
-		images[9] = ImageIO.read(new java.io.File("res/visited.png"));
-		images[10] = ImageIO.read(new java.io.File("res/path.png"));
 	}
 }

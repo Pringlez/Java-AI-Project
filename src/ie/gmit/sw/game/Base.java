@@ -1,5 +1,10 @@
 package ie.gmit.sw.game;
 
+/**  
+* Base.java - The base class containing shared attributes between player and enemy objects
+* @author John Walsh
+* @version 1.0
+*/
 public class Base {
 
 	private int health;
