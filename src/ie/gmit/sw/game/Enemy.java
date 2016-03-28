@@ -19,6 +19,7 @@ public class Enemy extends Base implements Runnable {
 	private int algorithm;
 	private Thread instance;
 	private Node[][] maze;
+	private Player player;
 	
 	// Idea: Make enemy walk only when the player walks
 	
@@ -52,26 +53,29 @@ public class Enemy extends Base implements Runnable {
 	}
 	
 	private boolean isValidMove(int r, int c){
-		try {
-			if (r <= maze.length - 1 && c <= maze[r].length - 1 && maze[r][c].getNodeType() == ' '){
+		if((r < 0) || (c < 0) || !(r <= maze.length - 1 && c <= maze[r].length - 1)) return false;
+		
+		switch(maze[r][c].getNodeType()){
+			case ' ':
 				maze[getRowPos()][getColPos()].setNodeType(' ');
 				maze[r][c].setNodeType('E');
-				return true;
-			}
-			else if(r <= maze.length - 1 && c <= maze[r].length - 1 && maze[r][c].getNodeType() == 'P'){
-				// Start fight here with player
-				// Using fuzzy logic
-				return false;
-			}else{
-				return false;
-			}
-		} catch (Exception error) {
-			//System.out.println("Error - " + error);
+			return true;
+			case 'P':
+				// Starting a battle with the player using the fuzzy logic library
+				FuzzyBattle fuzzyBattle = new FuzzyBattle();
+				boolean battleResult = fuzzyBattle.startBattle(player, this, "fcl/battle.fcl");
+				if(battleResult == false){
+					maze[getRowPos()][getColPos()].setNodeType('D');
+					this.setHealth(0);
+				}
+			return battleResult;
+			default:
 			return false;
 		}
 	}
 	
 	private void checkMove(int direction){
+		if(this.getHealth() <= 0) return;
 		// Moving the enemy object to a new position in the maze
 		switch(direction){
 			// Going up in the maze
@@ -155,5 +159,13 @@ public class Enemy extends Base implements Runnable {
 
 	public void setMaze(Node[][] maze) {
 		this.maze = maze;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

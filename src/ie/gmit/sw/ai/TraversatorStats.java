@@ -16,7 +16,11 @@ public class TraversatorStats {
 		
 		while (node != null){			
 			node = node.getParent();
-			if (node != null) node.setColor(Color.YELLOW); 
+			if (node != null){
+				node.setColor(Color.YELLOW);
+				node.setNodeType('T');
+				node.setWalkable(true);
+			}
 			depth++;			
 		}
 		

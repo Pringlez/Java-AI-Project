@@ -49,6 +49,7 @@ public class GameFrame implements KeyListener {
 	JLabel lblHealthPoints;
 	JLabel lblArmorPoints;
 	JLabel lblCurWeapon;
+	JLabel lblCurWeaponStr;
 	JLabel lblCurSpecial;
 	JLabel lblEnemiesAmount;
 	JLabel lblCommonAmount;
@@ -168,71 +169,71 @@ public class GameFrame implements KeyListener {
 		lblCurWeapon.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblCurWeapon);
 		
+		JLabel lblWeaponStr = new JLabel("Weapon Strength:");
+		lblWeaponStr.setBounds(10, 290, 140, 24);
+		lblWeaponStr.setForeground(Color.white);
+		lblWeaponStr.setFont(new Font("Serif", Font.BOLD, 18));
+		leftPanel.add(lblWeaponStr);
+		
+		lblCurWeaponStr = new JLabel("0");
+		lblCurWeaponStr.setBounds(160, 290, 40, 24);
+		lblCurWeaponStr.setForeground(Color.green);
+		lblCurWeaponStr.setFont(new Font("Serif", Font.BOLD, 18));
+		leftPanel.add(lblCurWeaponStr);
+		
 		JLabel lblSpecial = new JLabel("Special:");
-		lblSpecial.setBounds(10, 290, 70, 24);
+		lblSpecial.setBounds(10, 330, 70, 24);
 		lblSpecial.setForeground(Color.white);
 		lblSpecial.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblSpecial);
 		
 		lblCurSpecial = new JLabel("Empty");
-		lblCurSpecial.setBounds(80, 290, 90, 24);
+		lblCurSpecial.setBounds(80, 330, 90, 24);
 		lblCurSpecial.setForeground(Color.green);
 		lblCurSpecial.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblCurSpecial);
 		
 		JLabel lblEnemy = new JLabel("Enemy Stats");
-		lblEnemy.setBounds(10, 330, 170, 24);
+		lblEnemy.setBounds(10, 370, 170, 24);
 		lblEnemy.setForeground(Color.yellow);
 		lblEnemy.setFont(new Font("Serif", Font.BOLD, 24));
 		leftPanel.add(lblEnemy);
 		
 		JLabel lblEnemies = new JLabel("Enemies:");
-		lblEnemies.setBounds(10, 375, 80, 24);
+		lblEnemies.setBounds(10, 415, 80, 24);
 		lblEnemies.setForeground(Color.white);
 		lblEnemies.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblEnemies);
 		
 		lblEnemiesAmount = new JLabel("20");
-		lblEnemiesAmount.setBounds(90, 375, 80, 24);
+		lblEnemiesAmount.setBounds(90, 415, 80, 24);
 		lblEnemiesAmount.setForeground(Color.green);
 		lblEnemiesAmount.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblEnemiesAmount);
 		
 		JLabel lblCommon = new JLabel("Common:");
-		lblCommon.setBounds(10, 415, 90, 24);
+		lblCommon.setBounds(10, 455, 90, 24);
 		lblCommon.setForeground(Color.white);
 		lblCommon.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblCommon);
 		
 		lblCommonAmount = new JLabel("15");
-		lblCommonAmount.setBounds(100, 415, 80, 24);
+		lblCommonAmount.setBounds(100, 455, 80, 24);
 		lblCommonAmount.setForeground(Color.red);
 		lblCommonAmount.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblCommonAmount);
 		
 		JLabel lblBosses = new JLabel("Bosses:");
-		lblBosses.setBounds(10, 455, 70, 24);
+		lblBosses.setBounds(10, 495, 70, 24);
 		lblBosses.setForeground(Color.white);
 		lblBosses.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblBosses);
 		
 		lblBossesAmount = new JLabel("5");
-		lblBossesAmount.setBounds(80, 455, 80, 24);
+		lblBossesAmount.setBounds(80, 495, 80, 24);
 		lblBossesAmount.setForeground(Color.red);
 		lblBossesAmount.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblBossesAmount);
-		
-		JLabel lblDifficulty = new JLabel("Difficulty:");
-		lblDifficulty.setBounds(10, 495, 90, 24);
-		lblDifficulty.setForeground(Color.white);
-		lblDifficulty.setFont(new Font("Serif", Font.BOLD, 18));
-		leftPanel.add(lblDifficulty);
-		
-		lblCurDifficulty = new JLabel("Normal");
-		lblCurDifficulty.setBounds(100, 495, 90, 24);
-		lblCurDifficulty.setForeground(Color.green);
-		lblCurDifficulty.setFont(new Font("Serif", Font.BOLD, 18));
-		leftPanel.add(lblCurDifficulty);
 	}
 	
 	private void setupRightPanel(){
@@ -255,11 +256,23 @@ public class GameFrame implements KeyListener {
 		lblExits.setFont(new Font("Serif", Font.BOLD, 18));
 		rightPanel.add(lblExits);
 		
-		JLabel lblCurExits = new JLabel("0");
+		lblCurExits = new JLabel("0");
 		lblCurExits.setBounds(120, 50, 80, 24);
 		lblCurExits.setForeground(Color.yellow);
 		lblCurExits.setFont(new Font("Serif", Font.BOLD, 18));
 		rightPanel.add(lblCurExits);
+		
+		JLabel lblDifficulty = new JLabel("Difficulty:");
+		lblDifficulty.setBounds(15, 90, 90, 24);
+		lblDifficulty.setForeground(Color.white);
+		lblDifficulty.setFont(new Font("Serif", Font.BOLD, 18));
+		rightPanel.add(lblDifficulty);
+		
+		lblCurDifficulty = new JLabel("Normal");
+		lblCurDifficulty.setBounds(105, 90, 90, 24);
+		lblCurDifficulty.setForeground(Color.green);
+		lblCurDifficulty.setFont(new Font("Serif", Font.BOLD, 18));
+		rightPanel.add(lblCurDifficulty);
 		
 		JLabel lblHelp = new JLabel("Controls");
 		lblHelp.setBounds(15, 220, 170, 24);
@@ -351,6 +364,7 @@ public class GameFrame implements KeyListener {
 				try {
 					gameFrame.getContentPane().remove(gamePanel);
 					newGame(gameDifficulty2.getSelectedItem().toString());
+					lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
 					gameFrame.repaint();
 				} catch (Exception error) {
 					System.out.println("Error - " + error);
@@ -377,6 +391,7 @@ public class GameFrame implements KeyListener {
 	}
 	
 	private void setupCoverPanel() throws IOException {
+		
 		coverPanel = new JPanel();
 		coverPanel.setBounds(204, 0, 797, 670);
 		coverPanel.setBackground(Color.black);
@@ -410,8 +425,9 @@ public class GameFrame implements KeyListener {
 				setupLeftPanel();
 				setupRightPanel();
 				newGame(gameDifficulty1.getSelectedItem().toString());
-				gameFrame.repaint();
 				gameDifficulty2.setSelectedIndex(gameDifficulty1.getSelectedIndex());
+				lblCurDifficulty.setText(gameDifficulty1.getSelectedItem().toString());
+				gameFrame.repaint();
 			}
 		});
 		btnNewGame.setFont(new Font("Serif", Font.BOLD, 24));
@@ -485,6 +501,7 @@ public class GameFrame implements KeyListener {
 			enemies.add((Enemy) enemy);
 			enemies.get(i).setInstance(thread);
 			enemies.get(i).setMaze(maze);
+			enemies.get(i).setPlayer(player);
 			
 			boolean enemyPosSet = false;
 			
@@ -494,9 +511,7 @@ public class GameFrame implements KeyListener {
 			while(enemyPosSet != true){
 				row = (int) (MAZE_DIMENSION * Math.random());
 				col = (int) (MAZE_DIMENSION * Math.random());
-		    	// Need to set player to P char
-		    	// Set enemy to E char
-		    	// When they meet fight starts!
+				
 		    	if(maze[row][col].isWalkable()){
 		    		enemies.get(i).setRowPos(row);
 		    		enemies.get(i).setColPos(col);
@@ -504,6 +519,7 @@ public class GameFrame implements KeyListener {
 			    	enemyPosSet = true;
 		    	}
 			}
+			
 			isBoss = false;
 			thread.start();
 		}
@@ -516,8 +532,8 @@ public class GameFrame implements KeyListener {
 		
 		try {
 			gamePanel = new GameView(maze);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception error) {
+			System.out.println("Error - " + error);
 		}
 		
 		gamePanel.setBounds(204, 0, 800, 700);
@@ -527,13 +543,15 @@ public class GameFrame implements KeyListener {
     	gamePanel.setMaximumSize(d);
     	gameFrame.getContentPane().add(gamePanel);
     	
-    	setupEnemies(gameDifficulty);
     	placePlayer();
+    	setupEnemies(gameDifficulty);
+    	updateView();
 	}
 	
 	private void placePlayer(){
 		
-		player = new Player();
+		player = new Player(100, 100);
+		player.setWeapon("Unarmed");
 		
 		boolean playerPosSet = false;
 		
@@ -550,9 +568,7 @@ public class GameFrame implements KeyListener {
 		    	maze[player.getRowPos()][player.getColPos()].setNodeType('P');
 		    	playerPosSet = true;
 	    	}
-		}
-		
-	    updateView(); 		
+		} 		
 	}
 	
 	private void updateStatsGUI(){
@@ -563,6 +579,7 @@ public class GameFrame implements KeyListener {
 		lblHealthPoints.setText(Integer.toString(player.getHealth()));
 		lblArmorPoints.setText(Integer.toString(player.getArmor()));
 		lblCurWeapon.setText(player.getWeapon());
+		lblCurWeaponStr.setText(Integer.toString(player.getWeaponStrength()));
 		lblCurSpecial.setText(Integer.toString(player.getSpecial()));
 		lblEnemiesAmount.setText(Integer.toString(enemies.size()));
 		
@@ -578,6 +595,7 @@ public class GameFrame implements KeyListener {
 		
 		lblCommonAmount.setText(Integer.toString(commonCount));
 		lblBossesAmount.setText(Integer.toString(bossCount));
+		lblCurExits.setText(Integer.toString(1));
 		lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
 	}
 	
@@ -587,25 +605,25 @@ public class GameFrame implements KeyListener {
 		updateStatsGUI();
 	}
 
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e){
     	// Check here if the block is a bomb or weapon etc
         if (e.getKeyCode() == KeyEvent.VK_D && player.getColPos() < MAZE_DIMENSION - 1) {
-        	if (isValidMove(player.getRowPos(), player.getColPos() + 1)){
+        	if (isValidMove(player.getRowPos(), player.getColPos() + 1) && maze[player.getRowPos()][player.getColPos() + 1].isWalkable()){
         		player.setColPos(player.getColPos() + 1);
         		player.setSteps(player.getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_A && player.getColPos() > 0) {
-        	if (isValidMove(player.getRowPos(), player.getColPos() - 1)){
+        	if (isValidMove(player.getRowPos(), player.getColPos() - 1) && maze[player.getRowPos()][player.getColPos() - 1].isWalkable()){
         		player.setColPos(player.getColPos() - 1);
         		player.setSteps(player.getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_W && player.getRowPos() > 0) {
-        	if (isValidMove(player.getRowPos() - 1, player.getColPos())){
+        	if (isValidMove(player.getRowPos() - 1, player.getColPos()) && maze[player.getRowPos() - 1][player.getColPos()].isWalkable()){
         		player.setRowPos(player.getRowPos() - 1);
         		player.setSteps(player.getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_S && player.getRowPos() < MAZE_DIMENSION - 1) {
-        	if (isValidMove(player.getRowPos() + 1, player.getColPos())){
+        	if (isValidMove(player.getRowPos() + 1, player.getColPos()) && maze[player.getRowPos() + 1][player.getColPos()].isWalkable()){
         		player.setRowPos(player.getRowPos() + 1);
         		player.setSteps(player.getSteps() + 1);
         	}
@@ -613,12 +631,45 @@ public class GameFrame implements KeyListener {
         	gamePanel.toggleZoom();
         }else if (e.getKeyCode() == KeyEvent.VK_K){
         	// Fire Special Weapon!!
-        	Traversator t = new AStarTraversator(model.getGoalNode());
-        	t.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
+        	if(player.getSpecial() <= 0) return;
+	        	
+    		Traversator traverse = null;
+        	int randNum = new Random().nextInt((7 - 0) + 1) + 0;
+        	
+        	switch(0){
+        		case 0:
+        			traverse = new AStarTraversator(model.getGoalNode());
+        		break;
+        		case 1:
+        			traverse = new BasicHillClimbingTraversator(model.getGoalNode());
+	        	break;
+        		case 2:
+        			traverse = new BeamTraversator(model.getGoalNode(), 50);
+	        	break;
+        		case 3:
+        			traverse = new BestFirstTraversator(model.getGoalNode());
+	        	break;
+        		case 4:
+        			traverse = new BruteForceTraversator(true);
+	        	break;
+        		case 5:
+        			traverse = new DepthLimitedDFSTraversator(25);
+	        	break;
+        		case 6:
+        			traverse = new IDAStarTraversator(model.getGoalNode());
+	        	break;
+        		case 7:
+        			traverse = new IDDFSTraversator();
+	        	break;
+	        	default:
+	        		traverse = new AStarTraversator(model.getGoalNode());
+	        	break;
+        	}
+        	
+        	traverse.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
         	player.setSearchCount(player.getSearchCount() + 1);
-        }else{
-        	return;
-        }
+        	player.setSpecial(player.getSpecial() - 1);
+    	}
         
         updateView();       
     }
@@ -627,16 +678,57 @@ public class GameFrame implements KeyListener {
 	public void keyTyped(KeyEvent e) {} //Ignore
 	
 	private boolean isValidMove(int r, int c){
-		try {
-			if (r <= maze.length - 1 && c <= maze[r].length - 1 && maze[r][c].getNodeType() == ' '){
+		// Error checking the move position
+		if(!(r <= maze.length - 1 && c <= maze[r].length - 1)) return false;
+
+		switch(maze[r][c].getNodeType()){
+			case ' ':
+				// Health pick up,
 				maze[player.getRowPos()][player.getColPos()].setNodeType(' ');
 				maze[r][c].setNodeType('P');
-				return true;
-			}else{
-				return false;
-			}
-		} catch (Exception error) {
-			System.out.println("Error - " + error);
+			return true;
+			case 'W':
+				// Sword pick up, the least powerful weapon in the game
+				player.setWeapon("Sword");
+				player.setWeaponStrength(65);
+				maze[r][c].setNodeType('X');
+			return true;
+			case '?':
+				// Help me pick up, shows the player a possible route to the goal
+				player.setSpecial(player.getSpecial() + 1);
+				maze[r][c].setNodeType('X');
+			return true;
+			case 'B':
+				// A bomb pick up, very powerful bomb that kills enemies very well
+				player.setWeapon("Bomb");
+				player.setWeaponStrength(75);
+				maze[r][c].setNodeType('X');
+			return true;
+			case 'H':
+				// A hydrogen bomb pick up, extremely powerful and deadly weapon
+				player.setWeapon("H Bomb");
+				player.setWeaponStrength(100);
+				maze[r][c].setNodeType('X');
+			return true;
+			case 'M':
+				// Health pick up, adds 50 health to players character
+				player.setHealth(player.getHealth() + 50);
+				if(player.getHealth() > 100)
+					player.setHealth(100);
+				maze[r][c].setNodeType('X');
+			return true;
+			case 'A':
+				// Health pick up, adds 50 health to players character
+				player.setArmor(player.getArmor() + 50);
+				if(player.getArmor() > 100)
+					player.setArmor(100);
+				maze[r][c].setNodeType('X');
+			return true;
+			case 'T':
+				maze[player.getRowPos()][player.getColPos()].setNodeType(' ');
+				maze[r][c].setNodeType('P');
+			return true;
+			default:
 			return false;
 		}
 	}

@@ -17,7 +17,7 @@ public class GameView extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 	public static final int DEFAULT_VIEW_SIZE = 800;	
-	private static final int IMAGE_COUNT = 9;
+	private static final int IMAGE_COUNT = 13;
 	private int cellspan = 5;	
 	private int cellpadding = 2;
 	private Node[][] maze;
@@ -78,9 +78,12 @@ public class GameView extends JPanel implements ActionListener {
         		
         		if (zoomOut){
         			if(ch == 'E'){
+        				g2.setColor(Color.BLUE);
+    					g2.fillRect(x1, y1, size, size);
+        			}
+        			if(ch == 'D'){
         				g2.setColor(Color.RED);
     					g2.fillRect(x1, y1, size, size);
-    					//continue;
         			}
         			if (row == currentRow && col == currentCol){
         				g2.setColor(Color.ORANGE);
@@ -103,6 +106,14 @@ public class GameView extends JPanel implements ActionListener {
         			imageIndex = 4;
         		}else if (ch == 'E'){
         			imageIndex = enemy_state;
+        		}else if (ch == 'D'){
+        			imageIndex = 9;
+        		}else if (ch == 'T'){
+        			imageIndex = 10;
+        		}else if (ch == 'M'){
+        			imageIndex = 11;
+        		}else if (ch == 'A'){
+        			imageIndex = 12;
         		}else if (ch == 'P'){
             		imageIndex = player_state;
         		}else{
@@ -161,5 +172,9 @@ public class GameView extends JPanel implements ActionListener {
 		images[6] = ImageIO.read(new java.io.File("res/player_up.png"));
 		images[7] = ImageIO.read(new java.io.File("res/spider_down.png"));
 		images[8] = ImageIO.read(new java.io.File("res/spider_up.png"));
+		images[9] = ImageIO.read(new java.io.File("res/spider_dead.png"));
+		images[10] = ImageIO.read(new java.io.File("res/this_way.png"));
+		images[11] = ImageIO.read(new java.io.File("res/health.png"));
+		images[12] = ImageIO.read(new java.io.File("res/armor.png"));
 	}
 }

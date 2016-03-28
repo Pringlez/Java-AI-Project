@@ -14,6 +14,7 @@ public class IDDFSTraversator extends Utility implements Traversator {
 	private int visitCount = 0;
 	
 	public void traverse(Node[][] maze, Node start){
+		System.out.println("\nUsing IDDFS Traversator!");
 		unvisit(maze);
 		this.maze = maze;
 		int limit = 1;

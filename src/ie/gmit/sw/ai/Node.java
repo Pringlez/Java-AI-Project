@@ -57,8 +57,8 @@ public class Node {
 				if (paths[i] == direction) return true;
 			}
 			return false;
-		} catch (Exception e) {
-			System.out.println("Error - " + e);
+		} catch (Exception error) {
+			System.out.println("Error - " + error);
 			return false;
 		}
 	}

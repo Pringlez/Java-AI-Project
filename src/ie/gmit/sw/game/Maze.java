@@ -22,10 +22,12 @@ public class Maze {
 		buildPaths();
 		setGoalNode();
 		unvisit();
-		addFeature('W', 'X', (int)((rows * cols) * 0.01));
-		addFeature('?', 'X', (int)((rows * cols) * 0.01));
-		addFeature('B', 'X', (int)((rows * cols) * 0.01));
-		addFeature('H', 'X', (int)((rows * cols) * 0.01));
+		addFeature('M', 'X', 5);
+		addFeature('A', 'X', 5);
+		addFeature('W', 'X', 10);
+		addFeature('?', 'X', 8);
+		addFeature('B', 'X', 6);
+		addFeature('H', 'X', 4);
 	}
 	
 	private void init(){
@@ -108,6 +110,7 @@ public class Maze {
 			int randCol = generator.nextInt(maze[0].length);
 			if(maze[randRow][randCol].isWalkable()){
 				maze[randRow][randCol].setGoalNode(true);
+				maze[randRow][randCol].setNodeType('G');
 				goal = maze[randRow][randCol];
 				goalSet = true;
 			}

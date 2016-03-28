@@ -17,6 +17,7 @@ public class AStarTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
+		System.out.println("\nUsing A Star Traversator!");
 		unvisit(maze);
         long time = System.currentTimeMillis();
     	int visitCount = 0;

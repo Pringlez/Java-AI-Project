@@ -13,6 +13,7 @@ public class Player extends Base {
 	private int steps;
 	private int special;
 	private String weapon;
+	private int weaponStrength;
 	private int searchCount;
 	
 	public Player() {
@@ -61,6 +62,14 @@ public class Player extends Base {
 
 	public void setWeapon(String weapon) {
 		this.weapon = weapon;
+	}
+
+	public int getWeaponStrength() {
+		return weaponStrength;
+	}
+
+	public void setWeaponStrength(int weaponStrength) {
+		this.weaponStrength = weaponStrength;
 	}
 
 	public int getSearchCount() {

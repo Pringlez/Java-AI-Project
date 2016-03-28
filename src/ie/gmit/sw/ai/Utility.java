@@ -13,6 +13,8 @@ public abstract class Utility {
 		for (int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[i].length; j++){
 				maze[i][j].setVisited(false);
+				if(maze[i][j].getNodeType() == 'T')
+					maze[i][j].setNodeType(' ');
 				maze[i][j].setParent(null);
 				maze[i][j].setColor(Color.LIGHT_GRAY);
 			}

@@ -17,6 +17,7 @@ public class BestFirstTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
+		System.out.println("\nUsing Best First Traversator!");
 		unvisit(maze);
 		LinkedList<Node> queue = new LinkedList<Node>();
 		queue.addFirst(node);

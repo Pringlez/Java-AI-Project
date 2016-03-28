@@ -18,6 +18,7 @@ public class IDAStarTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node start){
+		System.out.println("\nUsing IDA Star Traversator!");
 		unvisit(maze);
 		this.maze = maze;
 		time = System.currentTimeMillis();

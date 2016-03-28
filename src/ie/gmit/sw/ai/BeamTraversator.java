@@ -19,6 +19,7 @@ public class BeamTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
+		System.out.println("\nUsing Beam Traversator!");
 		unvisit(maze);
 		LinkedList<Node> queue = new LinkedList<Node>();
 		queue.addFirst(node);

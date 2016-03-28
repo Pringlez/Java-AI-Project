@@ -19,6 +19,7 @@ public class DepthLimitedDFSTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
+		System.out.println("\nUsing Depth Limited DFS Traversator!");
 		unvisit(maze);
 		this.maze = maze;
 		System.out.println("Search with limit " + limit);
