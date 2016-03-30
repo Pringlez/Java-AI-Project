@@ -17,7 +17,7 @@ public class BruteForceTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
-		System.out.println("\nUsing Brute Force Traversator!");
+		System.out.println("\nUsing Brute Force Traversator to find goal!");
 		unvisit(maze);
         long time = System.currentTimeMillis();
     	int visitCount = 0;

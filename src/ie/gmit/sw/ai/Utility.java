@@ -9,6 +9,10 @@ import java.awt.Color;
 */
 public abstract class Utility {
 	
+	/**
+	 * Sets the nodes back to their default values
+	 * @param maze The node maze array object
+	 */
 	public void unvisit(Node[][] maze){
 		for (int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[i].length; j++){
@@ -21,6 +25,10 @@ public abstract class Utility {
 		}
 	}
 	
+	/**
+	 * Puts the thread to sleep for x amount of seconds
+	 * @param seconds Amount of seconds to suspend the thread
+	 */
 	public void sleep(int seconds){
 		try {
 			Thread.sleep(seconds * 1000);

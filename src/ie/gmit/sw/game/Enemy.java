@@ -28,7 +28,7 @@ public class Enemy extends Base implements Runnable {
 		setStrength(0);
 		setDifficulty(0);
 		setBoss(false);
-		setAlgorithm(0);
+		setAlgorithm(new Random().nextInt((2 - 0) + 1) + 0);
 	}
 	
 	public Enemy(int id, int health, int armor, int strength, int difficulty, boolean boss) {
@@ -37,14 +37,14 @@ public class Enemy extends Base implements Runnable {
 		setStrength(strength);
 		setDifficulty(difficulty);
 		setBoss(boss);
-		setAlgorithm(0);
+		setAlgorithm(new Random().nextInt((2 - 0) + 1) + 0);
 	}
 	
 	@Override
 	public void run() {
 		while(true){
 			try {
-	            Thread.sleep(300);
+	            Thread.sleep(500);
 	            checkMove(new Random().nextInt((3 - 0) + 1) + 0);
 	        } catch (InterruptedException error) {
 	            System.out.println("Error - " + error);
@@ -52,7 +52,14 @@ public class Enemy extends Base implements Runnable {
 		}
 	}
 	
+	/**
+	 * Checks if the player is making a valid move, return false if the move is invalid
+	 * @param r
+	 * @param c
+	 * @return
+	 */
 	private boolean isValidMove(int r, int c){
+		if(player.isGameOver()) return false;
 		if((r < 0) || (c < 0) || !(r <= maze.length - 1 && c <= maze[r].length - 1)) return false;
 		
 		switch(maze[r][c].getNodeType()){
@@ -63,17 +70,30 @@ public class Enemy extends Base implements Runnable {
 			case 'P':
 				// Starting a battle with the player using the fuzzy logic library
 				FuzzyBattle fuzzyBattle = new FuzzyBattle();
-				boolean battleResult = fuzzyBattle.startBattle(player, this, "fcl/battle.fcl");
-				if(battleResult == false){
+				boolean enemyWon = fuzzyBattle.startBattle(player, this, "fcl/battle.fcl");
+				if(enemyWon == true){
+					// The player has lost the game!
+					maze[getRowPos()][getColPos()].setNodeType(' ');
+					player.setGameOver(true);
+					maze[r][c].setNodeType('L');
+				}else{
 					maze[getRowPos()][getColPos()].setNodeType('D');
 					this.setHealth(0);
 				}
-			return battleResult;
+			return enemyWon;
+			case 'T':
+				maze[getRowPos()][getColPos()].setNodeType(' ');
+				maze[r][c].setNodeType('E');
+			return true;
 			default:
 			return false;
 		}
 	}
 	
+	/**
+	 * Checking what direction the player wants to go in
+	 * @param direction
+	 */
 	private void checkMove(int direction){
 		if(this.getHealth() <= 0) return;
 		// Moving the enemy object to a new position in the maze

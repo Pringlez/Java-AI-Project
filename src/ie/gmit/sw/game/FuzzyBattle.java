@@ -14,6 +14,14 @@ public class FuzzyBattle {
 	public FuzzyBattle(){
 	}
 	
+	/**
+	 * Starts a battle between the player and an enemy, using the fuzzy logic 
+	 * API to determine the outcome of the fight
+	 * @param player The player object instance
+	 * @param enemy The enemy object class instance
+	 * @param fclFilePath The path to the fcl logic file
+	 * @return Return true if the enemy wins the fight
+	 */
 	public boolean startBattle(Player player, Enemy enemy, String fclFilePath){
 		
         FIS fis = FIS.load(fclFilePath, true);
@@ -31,8 +39,8 @@ public class FuzzyBattle {
         fis.evaluate();
 
         Variable survivability = functionBlock.getVariable("survivability");
-        System.out.println(survivability.getDefaultValue());
-        System.out.println("Value: " + survivability.getValue());
+        //System.out.println("Default Value: " + survivability.getDefaultValue());
+        System.out.println("Survivability Percentage: " + survivability.getValue() + "%");
         
         boolean enemyWon = false;
         
@@ -52,11 +60,16 @@ public class FuzzyBattle {
         if(player.getHealth() <= 0){
         	player.setHealth(0);
         	System.out.println("Game Over!");
+        	System.out.println("Player Score: " + player.getScore());
         	enemyWon = true;
+        	player.setGameOver(true);
         }
         
-        if(!enemyWon)
+        if(!enemyWon){
         	player.setScore(player.getScore() + 25);
+        	System.out.println("Player Health: " + player.getHealth());
+        	System.out.println("Player Armor: " + player.getArmor());
+        }
         
 		return enemyWon;
 	}

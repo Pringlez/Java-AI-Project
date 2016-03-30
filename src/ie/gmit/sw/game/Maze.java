@@ -22,14 +22,17 @@ public class Maze {
 		buildPaths();
 		setGoalNode();
 		unvisit();
-		addFeature('M', 'X', 5);
-		addFeature('A', 'X', 5);
-		addFeature('W', 'X', 10);
-		addFeature('?', 'X', 8);
-		addFeature('B', 'X', 6);
-		addFeature('H', 'X', 4);
+		addFeature('M', 'X', 3);
+		addFeature('A', 'X', 3);
+		addFeature('W', 'X', 4);
+		addFeature('?', 'X', 2);
+		addFeature('B', 'X', 3);
+		addFeature('H', 'X', 2);
 	}
 	
+	/**
+	 * Initialize the node maze array
+	 */
 	private void init(){
 		for (int row = 0; row < maze.length; row++){
 			for (int col = 0; col < maze[row].length; col++){
@@ -40,6 +43,13 @@ public class Maze {
 		}
 	}
 	
+	/**
+	 * Add the maze features to the game, like weapons, armor and health
+	 * by replacing the default character
+	 * @param feature
+	 * @param replace
+	 * @param number
+	 */
 	private void addFeature(char feature, char replace, int number){
 		int counter = 0;
 		while (counter < feature){
@@ -53,6 +63,9 @@ public class Maze {
 		}
 	}
 	
+	/**
+	 * Builds the maze by randomly adding walkways to the maze
+	 */
 	private void buildMaze(){
 		for (int row = 0; row < maze.length; row++){
 			for (int col = 0; col < maze[row].length - 1; col++){
@@ -71,52 +84,56 @@ public class Maze {
 		}	
 	}
 	
+	/**
+	 * Generates the paths found next to each node in the maze
+	 */
 	private void buildPaths(){
 		for (int row = 0; row < maze.length; row++){
 			for (int col = 0; col < maze[row].length - 1; col++){
-				try {
+				if(col < maze[row].length - 1)
 					if(maze[row][col + 1].isWalkable()){
 						maze[row][col].addPath(Node.Direction.West);
 					}
-				} catch (Exception e) {
-				}
-				try {
+				if(col > 0)
 					if(maze[row][col - 1].isWalkable()){
 						maze[row][col].addPath(Node.Direction.East);
 					}
-				} catch (Exception e) {
-				}
-				try {
+				if(row < maze.length - 1)
 					if(maze[row + 1][col].isWalkable()){
 						maze[row][col].addPath(Node.Direction.North);
 					}
-				} catch (Exception e) {
-				}
-				try {
+				if(row > 0)
 					if(maze[row - 1][col].isWalkable()){
 						maze[row][col].addPath(Node.Direction.South);
 					}
-				} catch (Exception e) {
-				}
 			}
 		}
 	}
 	
+	/**
+	 * Randomly create the goal node in the maze
+	 */
 	public void setGoalNode() {
 		Random generator = new Random();
 		boolean goalSet = false;
 		while(goalSet != true){
 			int randRow = generator.nextInt(maze.length);
 			int randCol = generator.nextInt(maze[0].length);
-			if(maze[randRow][randCol].isWalkable()){
-				maze[randRow][randCol].setGoalNode(true);
-				maze[randRow][randCol].setNodeType('G');
-				goal = maze[randRow][randCol];
-				goalSet = true;
-			}
+			randRow = randRow - 20;
+			if(randRow > 0)
+				if(maze[randRow][randCol].isWalkable()){
+					maze[randRow][randCol].setGoalNode(true);
+					maze[randRow][randCol].setNodeType('G');
+					maze[randRow][randCol].setWalkable(true);
+					goal = maze[randRow][randCol];
+					goalSet = true;
+				}
 		}
 	}
 	
+	/**
+	 * Un-visit all nodes in the maze
+	 */
 	protected void unvisit(){
 		for (int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[i].length; j++){

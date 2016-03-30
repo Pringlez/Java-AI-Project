@@ -17,7 +17,7 @@ public class AStarTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
-		System.out.println("\nUsing A Star Traversator!");
+		System.out.println("\nUsing A Star Traversator to find goal!");
 		unvisit(maze);
         long time = System.currentTimeMillis();
     	int visitCount = 0;
@@ -26,11 +26,11 @@ public class AStarTraversator extends Utility implements Traversator {
 		java.util.List<Node> closed = new ArrayList<Node>();
     	   	
 		open.offer(node);
-		node.setPathCost(0);		
+		node.setPathCost(0);
 		while(!open.isEmpty()){
-			node = open.poll();		
+			node = open.poll();
 			closed.add(node);
-			node.setVisited(true);	
+			node.setVisited(true);
 			visitCount++;
 			
 			if (node.isGoalNode()){
@@ -58,7 +58,7 @@ public class AStarTraversator extends Utility implements Traversator {
 					child.setPathCost(node.getPathCost() + 1);
 					open.add(child);
 				}
-			}									
+			}
 		}
 	}
 }

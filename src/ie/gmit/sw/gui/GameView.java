@@ -16,13 +16,13 @@ import ie.gmit.sw.ai.Node;
 public class GameView extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
-	public static final int DEFAULT_VIEW_SIZE = 800;	
-	private static final int IMAGE_COUNT = 13;
+	private static final int IMAGE_COUNT = 16;
+	public static final int DEFAULT_VIEW_SIZE = 800;
+	public static int player_state = 6;
 	private int cellspan = 5;	
 	private int cellpadding = 2;
 	private Node[][] maze;
 	private BufferedImage[] images;
-	private int player_state = 5;
 	private int enemy_state = 7;
 	private Timer timer;
 	private int currentRow;
@@ -35,7 +35,7 @@ public class GameView extends JPanel implements ActionListener {
 		this.maze = maze;
 		setBackground(Color.LIGHT_GRAY);
 		setDoubleBuffered(true);
-		timer = new Timer(300, this);
+		timer = new Timer(100, this);
 		timer.start();
 	}
 	
@@ -94,30 +94,52 @@ public class GameView extends JPanel implements ActionListener {
         			ch = maze[currentRow - cellpadding + row][currentCol - cellpadding + col].getNodeType();
         		}
         		
-        		if (ch == 'X'){        			
-        			imageIndex = 0;
-        		}else if (ch == 'W'){
-        			imageIndex = 1;
-        		}else if (ch == '?'){
-        			imageIndex = 2;
-        		}else if (ch == 'B'){
-        			imageIndex = 3;
-        		}else if (ch == 'H'){
-        			imageIndex = 4;
-        		}else if (ch == 'E'){
-        			imageIndex = enemy_state;
-        		}else if (ch == 'D'){
-        			imageIndex = 9;
-        		}else if (ch == 'T'){
-        			imageIndex = 10;
-        		}else if (ch == 'M'){
-        			imageIndex = 11;
-        		}else if (ch == 'A'){
-        			imageIndex = 12;
-        		}else if (ch == 'P'){
-            		imageIndex = player_state;
-        		}else{
-        			imageIndex = -1;
+        		switch(ch){
+	        		case 'X':
+	        			imageIndex = 0;
+	        		break;
+	        		case 'W':
+	        			imageIndex = 1;
+            		break;
+	        		case '?':
+	        			imageIndex = 2;
+            		break;
+	        		case 'B':
+	        			imageIndex = 3;
+            		break;
+	        		case 'H':
+	        			imageIndex = 4;
+            		break;
+	        		case 'E':
+	        			imageIndex = enemy_state;
+            		break;
+	        		case 'D':
+	        			imageIndex = 9;
+            		break;
+	        		case 'T':
+	        			imageIndex = 10;
+            		break;
+	        		case 'M':
+	        			imageIndex = 11;
+            		break;
+	        		case 'A':
+	        			imageIndex = 12;
+	            	break;
+	        		case 'P':
+	        			imageIndex = player_state;
+	            	break;
+	        		case 'G':
+	        			imageIndex = 13;
+	            	break;
+	        		case 'Z':
+	        			imageIndex = 14;
+	            	break;
+	        		case 'L':
+	        			imageIndex = 15;
+	            	break;
+	            	default:
+	            		imageIndex = -1;
+	            	break;
         		}
         		
         		if (imageIndex >= 0){
@@ -145,11 +167,6 @@ public class GameView extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (player_state < 0 || player_state == 5){
-			player_state = 6;
-		}else{
-			player_state = 5;
-		}
 		if (enemy_state < 0 || enemy_state == 7){
 			enemy_state = 8;
 		}else{
@@ -176,5 +193,8 @@ public class GameView extends JPanel implements ActionListener {
 		images[10] = ImageIO.read(new java.io.File("res/this_way.png"));
 		images[11] = ImageIO.read(new java.io.File("res/health.png"));
 		images[12] = ImageIO.read(new java.io.File("res/armor.png"));
+		images[13] = ImageIO.read(new java.io.File("res/goal.png"));
+		images[14] = ImageIO.read(new java.io.File("res/win.png"));
+		images[15] = ImageIO.read(new java.io.File("res/lose.png"));
 	}
 }

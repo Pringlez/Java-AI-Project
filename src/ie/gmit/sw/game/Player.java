@@ -15,6 +15,7 @@ public class Player extends Base {
 	private String weapon;
 	private int weaponStrength;
 	private int searchCount;
+	private boolean gameOver;
 	
 	public Player() {
 		super();
@@ -78,5 +79,13 @@ public class Player extends Base {
 
 	public void setSearchCount(int searchCount) {
 		this.searchCount = searchCount;
+	}
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
 	}
 }

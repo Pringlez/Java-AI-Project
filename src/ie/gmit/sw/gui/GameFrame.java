@@ -69,6 +69,10 @@ public class GameFrame implements KeyListener {
 		setupFrame();
 	}
 	
+	/**
+	 * Setup of the window frame that surrounds the game
+	 * @throws Exception
+	 */
 	private void setupFrame() throws Exception {
 		gameFrame = new JFrame("Maze Game - AI Project - John Walsh");
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,6 +87,9 @@ public class GameFrame implements KeyListener {
 		gameFrame.repaint();
 	}
 	
+	/**
+	 * Setup of the left panel in the jframe that contains labels and information for the player
+	 */
 	private void setupLeftPanel(){
 		
 		leftPanel = new JPanel();
@@ -181,14 +188,14 @@ public class GameFrame implements KeyListener {
 		lblCurWeaponStr.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblCurWeaponStr);
 		
-		JLabel lblSpecial = new JLabel("Special:");
-		lblSpecial.setBounds(10, 330, 70, 24);
+		JLabel lblSpecial = new JLabel("Special Pick Up:");
+		lblSpecial.setBounds(10, 330, 130, 24);
 		lblSpecial.setForeground(Color.white);
 		lblSpecial.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblSpecial);
 		
-		lblCurSpecial = new JLabel("Empty");
-		lblCurSpecial.setBounds(80, 330, 90, 24);
+		lblCurSpecial = new JLabel("0");
+		lblCurSpecial.setBounds(148, 330, 90, 24);
 		lblCurSpecial.setForeground(Color.green);
 		lblCurSpecial.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblCurSpecial);
@@ -235,7 +242,10 @@ public class GameFrame implements KeyListener {
 		lblBossesAmount.setFont(new Font("Serif", Font.BOLD, 18));
 		leftPanel.add(lblBossesAmount);
 	}
-	
+
+	/**
+	 * Setup of the right panel in the jframe that contains labels and information for the player
+	 */
 	private void setupRightPanel(){
 		
 		rightPanel = new JPanel();
@@ -340,14 +350,14 @@ public class GameFrame implements KeyListener {
 		lblZoomOutButton.setFont(new Font("Serif", Font.BOLD, 18));
 		rightPanel.add(lblZoomOutButton);
 		
-		JLabel lblSpecialWeapon = new JLabel("Special:");
-		lblSpecialWeapon.setBounds(15, 460, 70, 24);
+		JLabel lblSpecialWeapon = new JLabel("Special Pick Up:");
+		lblSpecialWeapon.setBounds(15, 460, 130, 24);
 		lblSpecialWeapon.setForeground(Color.white);
 		lblSpecialWeapon.setFont(new Font("Serif", Font.BOLD, 18));
 		rightPanel.add(lblSpecialWeapon);
 		
 		JLabel lblSpecialWeaponButton = new JLabel("K");
-		lblSpecialWeaponButton.setBounds(85, 460, 80, 24);
+		lblSpecialWeaponButton.setBounds(151, 460, 80, 24);
 		lblSpecialWeaponButton.setForeground(Color.yellow);
 		lblSpecialWeaponButton.setFont(new Font("Serif", Font.BOLD, 18));
 		rightPanel.add(lblSpecialWeaponButton);
@@ -366,6 +376,7 @@ public class GameFrame implements KeyListener {
 					newGame(gameDifficulty2.getSelectedItem().toString());
 					lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
 					gameFrame.repaint();
+					player.setGameOver(false);
 				} catch (Exception error) {
 					System.out.println("Error - " + error);
 				}
@@ -390,6 +401,10 @@ public class GameFrame implements KeyListener {
 		rightPanel.add(gameDifficulty2);
 	}
 	
+	/**
+	 * Setup of the cover panel that greets the player when they first launch the game
+	 * @throws IOException
+	 */
 	private void setupCoverPanel() throws IOException {
 		
 		coverPanel = new JPanel();
@@ -436,6 +451,10 @@ public class GameFrame implements KeyListener {
 		coverPanel.add(btnNewGame);
 	}
 	
+	/**
+	 * Creates and spawns the enemies in the maze, enemy strength depends on the game difficulty
+	 * @param gameDifficulty
+	 */
 	private void setupEnemies(String gameDifficulty){
 		
 		int amount;
@@ -508,10 +527,12 @@ public class GameFrame implements KeyListener {
 			int row;
 			int col;
 			
+			// Continue to loop until a good position is found
 			while(enemyPosSet != true){
 				row = (int) (MAZE_DIMENSION * Math.random());
 				col = (int) (MAZE_DIMENSION * Math.random());
 				
+				// Checking if the area is walkable, if true then place enemy
 		    	if(maze[row][col].isWalkable()){
 		    		enemies.get(i).setRowPos(row);
 		    		enemies.get(i).setColPos(col);
@@ -525,6 +546,10 @@ public class GameFrame implements KeyListener {
 		}
 	}
 	
+	/**
+	 * Starts a new game by re-generating the maze and call the enemy and player creation methods
+	 * @param gameDifficulty
+	 */
 	private void newGame(String gameDifficulty) {
 		
 		model = new Maze(MAZE_DIMENSION, MAZE_DIMENSION);
@@ -548,6 +573,9 @@ public class GameFrame implements KeyListener {
     	updateView();
 	}
 	
+	/**
+	 * Places the player randomly in the maze
+	 */
 	private void placePlayer(){
 		
 		player = new Player(100, 100);
@@ -558,19 +586,26 @@ public class GameFrame implements KeyListener {
 		int row;
 		int col;
 		
+		// Continue to loop until a good position is found
 		while(playerPosSet != true){
 			row = (int) (MAZE_DIMENSION * Math.random());
 			col = (int) (MAZE_DIMENSION * Math.random());
 			
-	    	if(maze[row][col].isWalkable()){
-		    	player.setRowPos(row);
-		    	player.setColPos(col);
-		    	maze[player.getRowPos()][player.getColPos()].setNodeType('P');
-		    	playerPosSet = true;
-	    	}
+			row = row - 20;
+			// Checking if the area is walkable, if true then place the player
+			if(row > 0)
+		    	if(maze[row][col].isWalkable()){
+			    	player.setRowPos(row);
+			    	player.setColPos(col);
+			    	maze[player.getRowPos()][player.getColPos()].setNodeType('P');
+			    	playerPosSet = true;
+		    	}
 		} 		
 	}
 	
+	/**
+	 * Updates the UI information showing in the frame, both player info and enemy info
+	 */
 	private void updateStatsGUI(){
 		
 		lblCurScore.setText(Integer.toString(player.getScore()));
@@ -599,31 +634,43 @@ public class GameFrame implements KeyListener {
 		lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
 	}
 	
+	/**
+	 * Update the view by calling the game panel set position methods
+	 */
 	private void updateView(){
 		gamePanel.setCurrentRow(player.getRowPos());
 		gamePanel.setCurrentCol(player.getColPos());
 		updateStatsGUI();
 	}
 
+	/**
+	 * Check what key the user presses and executes the code / methods if a valid button is pressed
+	 */
     public void keyPressed(KeyEvent e){
+    	if(player.isGameOver()) return;
+    	
     	// Check here if the block is a bomb or weapon etc
         if (e.getKeyCode() == KeyEvent.VK_D && player.getColPos() < MAZE_DIMENSION - 1) {
         	if (isValidMove(player.getRowPos(), player.getColPos() + 1) && maze[player.getRowPos()][player.getColPos() + 1].isWalkable()){
+        		GameView.player_state = 5;
         		player.setColPos(player.getColPos() + 1);
         		player.setSteps(player.getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_A && player.getColPos() > 0) {
         	if (isValidMove(player.getRowPos(), player.getColPos() - 1) && maze[player.getRowPos()][player.getColPos() - 1].isWalkable()){
+        		GameView.player_state = 5;
         		player.setColPos(player.getColPos() - 1);
         		player.setSteps(player.getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_W && player.getRowPos() > 0) {
         	if (isValidMove(player.getRowPos() - 1, player.getColPos()) && maze[player.getRowPos() - 1][player.getColPos()].isWalkable()){
+        		GameView.player_state = 5;
         		player.setRowPos(player.getRowPos() - 1);
         		player.setSteps(player.getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_S && player.getRowPos() < MAZE_DIMENSION - 1) {
         	if (isValidMove(player.getRowPos() + 1, player.getColPos()) && maze[player.getRowPos() + 1][player.getColPos()].isWalkable()){
+        		GameView.player_state = 5;
         		player.setRowPos(player.getRowPos() + 1);
         		player.setSteps(player.getSteps() + 1);
         	}
@@ -632,17 +679,18 @@ public class GameFrame implements KeyListener {
         }else if (e.getKeyCode() == KeyEvent.VK_K){
         	// Fire Special Weapon!!
         	if(player.getSpecial() <= 0) return;
-	        	
+	        
+        	// Creates a new search algorithm object to find the goal node
     		Traversator traverse = null;
         	int randNum = new Random().nextInt((7 - 0) + 1) + 0;
         	
-        	switch(0){
+        	switch(randNum){
         		case 0:
         			traverse = new AStarTraversator(model.getGoalNode());
         		break;
         		case 1:
-        			traverse = new BasicHillClimbingTraversator(model.getGoalNode());
-	        	break;
+        			//traverse = new BasicHillClimbingTraversator(model.getGoalNode());
+	        	//break;
         		case 2:
         			traverse = new BeamTraversator(model.getGoalNode(), 50);
 	        	break;
@@ -650,22 +698,25 @@ public class GameFrame implements KeyListener {
         			traverse = new BestFirstTraversator(model.getGoalNode());
 	        	break;
         		case 4:
+        			// Slight problem with this search, over writes blocks
         			traverse = new BruteForceTraversator(true);
 	        	break;
         		case 5:
-        			traverse = new DepthLimitedDFSTraversator(25);
+        			traverse = new DepthLimitedDFSTraversator(maze.length / 2);
 	        	break;
         		case 6:
-        			traverse = new IDAStarTraversator(model.getGoalNode());
-	        	break;
+        			//traverse = new IDAStarTraversator(model.getGoalNode());
+	        	//break;
         		case 7:
-        			traverse = new IDDFSTraversator();
-	        	break;
+        			// Does not work for some reason
+        			//traverse = new IDDFSTraversator();
+	        	//break;
 	        	default:
 	        		traverse = new AStarTraversator(model.getGoalNode());
 	        	break;
         	}
         	
+        	// Calls the specific traverse method contained in the class instantiated
         	traverse.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
         	player.setSearchCount(player.getSearchCount() + 1);
         	player.setSpecial(player.getSpecial() - 1);
@@ -674,9 +725,18 @@ public class GameFrame implements KeyListener {
         updateView();       
     }
     
-    public void keyReleased(KeyEvent e) {} //Ignore
-	public void keyTyped(KeyEvent e) {} //Ignore
+    public void keyReleased(KeyEvent e) {
+    	GameView.player_state = 6;
+    }
+    
+	public void keyTyped(KeyEvent e) {}
 	
+	/**
+	 * Checks if the player is making a valid move
+	 * @param r
+	 * @param c
+	 * @return
+	 */
 	private boolean isValidMove(int r, int c){
 		// Error checking the move position
 		if(!(r <= maze.length - 1 && c <= maze[r].length - 1)) return false;
@@ -689,9 +749,11 @@ public class GameFrame implements KeyListener {
 			return true;
 			case 'W':
 				// Sword pick up, the least powerful weapon in the game
-				player.setWeapon("Sword");
-				player.setWeaponStrength(65);
-				maze[r][c].setNodeType('X');
+				if(!player.getWeapon().equals("Sword")){
+					player.setWeapon("Sword");
+					player.setWeaponStrength(55);
+					maze[r][c].setNodeType('X');
+				}
 			return true;
 			case '?':
 				// Help me pick up, shows the player a possible route to the goal
@@ -700,33 +762,46 @@ public class GameFrame implements KeyListener {
 			return true;
 			case 'B':
 				// A bomb pick up, very powerful bomb that kills enemies very well
-				player.setWeapon("Bomb");
-				player.setWeaponStrength(75);
-				maze[r][c].setNodeType('X');
+				if(!player.getWeapon().equals("Bomb")){
+					player.setWeapon("Bomb");
+					player.setWeaponStrength(75);
+					maze[r][c].setNodeType('X');
+				}
 			return true;
 			case 'H':
 				// A hydrogen bomb pick up, extremely powerful and deadly weapon
-				player.setWeapon("H Bomb");
-				player.setWeaponStrength(100);
-				maze[r][c].setNodeType('X');
+				if(!player.getWeapon().equals("H Bomb")){
+					player.setWeapon("H Bomb");
+					player.setWeaponStrength(100);
+					maze[r][c].setNodeType('X');
+				}
 			return true;
 			case 'M':
 				// Health pick up, adds 50 health to players character
-				player.setHealth(player.getHealth() + 50);
-				if(player.getHealth() > 100)
-					player.setHealth(100);
-				maze[r][c].setNodeType('X');
+				if(player.getHealth() < 100){
+					player.setHealth(player.getHealth() + 50);
+					if(player.getHealth() > 100)
+						player.setHealth(100);
+					maze[r][c].setNodeType('X');
+				}
 			return true;
 			case 'A':
 				// Health pick up, adds 50 health to players character
-				player.setArmor(player.getArmor() + 50);
-				if(player.getArmor() > 100)
-					player.setArmor(100);
-				maze[r][c].setNodeType('X');
+				if(player.getArmor() < 100){
+					player.setArmor(player.getArmor() + 50);
+					if(player.getArmor() > 100)
+						player.setArmor(100);
+					maze[r][c].setNodeType('X');
+				}
 			return true;
 			case 'T':
 				maze[player.getRowPos()][player.getColPos()].setNodeType(' ');
 				maze[r][c].setNodeType('P');
+			return true;
+			case 'G':
+				maze[player.getRowPos()][player.getColPos()].setNodeType(' ');
+				maze[r][c].setNodeType('Z');
+				player.setGameOver(true);
 			return true;
 			default:
 			return false;

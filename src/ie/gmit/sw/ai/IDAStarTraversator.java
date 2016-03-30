@@ -18,7 +18,7 @@ public class IDAStarTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node start){
-		System.out.println("\nUsing IDA Star Traversator!");
+		System.out.println("\nUsing IDA Star Traversator to find goal!");
 		unvisit(maze);
 		this.maze = maze;
 		time = System.currentTimeMillis();
@@ -29,14 +29,13 @@ public class IDAStarTraversator extends Utility implements Traversator {
 		do{
 			int result = contour(start, 0, bound);
 			if (result == Integer.MIN_VALUE) complete = true; //Found
-			if (result == Integer.MAX_VALUE) System.exit(1); //Not found				
+			if (result == Integer.MAX_VALUE); //System.exit(1); //Not found				
 			bound = result;
 			
 			try { //Pause before next iteration
 				if (!complete) {
 					// Sleep for x amount of seconds
-					//sleep(1);
-					unvisit(maze);					
+					//sleep(1);					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
