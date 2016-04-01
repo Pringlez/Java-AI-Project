@@ -19,7 +19,7 @@ public class IDAStarTraversator extends Utility implements Traversator {
 	
 	public void traverse(Node[][] maze, Node start){
 		System.out.println("\nUsing IDA Star Traversator to find goal!");
-		unvisit(maze);
+		unvisitA(maze);
 		this.maze = maze;
 		time = System.currentTimeMillis();
 		
@@ -45,7 +45,7 @@ public class IDAStarTraversator extends Utility implements Traversator {
 		//Output the stats
 		if (complete){
 	        time = System.currentTimeMillis() - time; //Stop the clock
-	        TraversatorStats.printStats(goal, time, visitCount);
+	        TraversatorStats.printStats(goal, time, visitCount, false);
 	        
 		}else{
 			System.out.println("Unable to find goal node.");

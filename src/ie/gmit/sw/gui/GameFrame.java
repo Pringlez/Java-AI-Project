@@ -23,7 +23,9 @@ import javax.swing.JButton;
 
 import ie.gmit.sw.ai.*;
 import ie.gmit.sw.game.Enemy;
+import ie.gmit.sw.game.FuzzyBattle;
 import ie.gmit.sw.game.Maze;
+import ie.gmit.sw.game.PlaySound;
 import ie.gmit.sw.game.Player;
 
 /**  
@@ -41,6 +43,7 @@ public class GameFrame implements KeyListener {
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private Node[][] maze;
+	private Node goal;
 	
 	// Left panel elements
 	JLabel lblCurScore;
@@ -430,6 +433,7 @@ public class GameFrame implements KeyListener {
 		gameDifficulty1.addItem("Easy");
 		gameDifficulty1.addItem("Normal");
 		gameDifficulty1.addItem("Hard");
+		gameDifficulty1.setSelectedIndex(1);
 		gameDifficulty1.setFocusable(false);
 		coverPanel.add(gameDifficulty1);
 		
@@ -469,34 +473,34 @@ public class GameFrame implements KeyListener {
 		
 		switch(gameDifficulty){
 			case "Easy":
-				amount = 8;
-				health = random.nextInt((50 - 25) + 1) + 25;
-				armor = random.nextInt((25 - 5) + 1) + 5;
-				strength = random.nextInt((50 - 30) + 1) + 30;
+				amount = 20;
+				health = random.nextInt((60 - 25) + 1) + 25;
+				armor = random.nextInt((35 - 5) + 1) + 5;
+				strength = random.nextInt((60 - 30) + 1) + 30;
 				difficulty = 0;
 				bosses = 1;
 			break;
 			case "Normal":
-				amount = 12;
+				amount = 35;
 				health = random.nextInt((75 - 55) + 1) + 55;
 				armor = random.nextInt((45 - 25) + 1) + 25;
-				strength = random.nextInt((50 - 30) + 1) + 30;
+				strength = random.nextInt((70 - 30) + 1) + 30;
 				difficulty = 1;
 				bosses = 2;
 			break;
 			case "Hard":
-				amount = 16;
-				health = random.nextInt((60 - 40) + 1) + 40;
+				amount = 50;
+				health = random.nextInt((100 - 40) + 1) + 40;
 				armor = random.nextInt((75 - 50) + 1) + 50;
 				strength = random.nextInt((80 - 30) + 1) + 30;
 				difficulty = 2;
 				bosses = 3;
 			break;
 			default:
-				amount = 8;
+				amount = 20;
 				health = random.nextInt((75 - 55) + 1) + 55;
 				armor = random.nextInt((45 - 25) + 1) + 25;
-				strength = random.nextInt((50 - 30) + 1) + 30;
+				strength = random.nextInt((70 - 30) + 1) + 30;
 				difficulty = 1;
 				bosses = 2;
 			break;
@@ -521,6 +525,7 @@ public class GameFrame implements KeyListener {
 			enemies.get(i).setInstance(thread);
 			enemies.get(i).setMaze(maze);
 			enemies.get(i).setPlayer(player);
+			enemies.get(i).setAlgorithm(random.nextInt((2 - 0) + 1) + 0);
 			
 			boolean enemyPosSet = false;
 			
@@ -537,6 +542,7 @@ public class GameFrame implements KeyListener {
 		    		enemies.get(i).setRowPos(row);
 		    		enemies.get(i).setColPos(col);
 			    	maze[enemies.get(i).getRowPos()][enemies.get(i).getColPos()].setNodeType('E');
+			    	maze[enemies.get(i).getRowPos()][enemies.get(i).getColPos()].setEnemyID(i);
 			    	enemyPosSet = true;
 		    	}
 			}
@@ -553,6 +559,7 @@ public class GameFrame implements KeyListener {
 	private void newGame(String gameDifficulty) {
 		
 		model = new Maze(MAZE_DIMENSION, MAZE_DIMENSION);
+		this.goal = model.getGoalNode();
 		maze = model.getMaze();
 		
 		try {
@@ -568,7 +575,7 @@ public class GameFrame implements KeyListener {
     	gamePanel.setMaximumSize(d);
     	gameFrame.getContentPane().add(gamePanel);
     	
-    	placePlayer();
+    	placePlayer(model.getGoalPos());
     	setupEnemies(gameDifficulty);
     	updateView();
 	}
@@ -576,30 +583,51 @@ public class GameFrame implements KeyListener {
 	/**
 	 * Places the player randomly in the maze
 	 */
-	private void placePlayer(){
+	private void placePlayer(int goalPos){
 		
 		player = new Player(100, 100);
 		player.setWeapon("Unarmed");
 		
+		Random random = new Random();
+		int randRow = 0;
+		int randCol = 0;
 		boolean playerPosSet = false;
-		
-		int row;
-		int col;
 		
 		// Continue to loop until a good position is found
 		while(playerPosSet != true){
-			row = (int) (MAZE_DIMENSION * Math.random());
-			col = (int) (MAZE_DIMENSION * Math.random());
 			
-			row = row - 20;
+			switch(goalPos){
+				case 0:
+					// Creates the player on the top side of the maze
+					randRow = random.nextInt((2 - 0) + 1) + 0;
+					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+				break;
+				case 1:
+					// Creates the nodes on the left side of the maze
+					randRow = random.nextInt(((maze.length - 15) - 1) + 1) + 1;
+					randCol = random.nextInt((2 - 0) + 1) + 0;
+				break;
+				case 2:
+					// Creates the nodes on the bottom side of the maze
+					randRow = random.nextInt(((maze.length - 15) - (maze.length - 15)) + 1) + (maze.length - 15);
+					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+				break;
+				default:
+					randRow = random.nextInt((2 - 0) + 1) + 0;
+					randCol = random.nextInt(((maze[0].length - 1) - (maze[0].length - 3)) + 1) + (maze[0].length - 3);
+				break;
+			}
+			
 			// Checking if the area is walkable, if true then place the player
-			if(row > 0)
-		    	if(maze[row][col].isWalkable()){
-			    	player.setRowPos(row);
-			    	player.setColPos(col);
-			    	maze[player.getRowPos()][player.getColPos()].setNodeType('P');
-			    	playerPosSet = true;
-		    	}
+	    	try {
+				if(maze[randRow][randCol].isWalkable()){
+					player.setRowPos(randRow);
+					player.setColPos(randCol);
+					maze[player.getRowPos()][player.getColPos()].setNodeType('P');
+					playerPosSet = true;
+				}
+			} catch (Exception e) {
+			}
 		} 		
 	}
 	
@@ -609,7 +637,7 @@ public class GameFrame implements KeyListener {
 	private void updateStatsGUI(){
 		
 		lblCurScore.setText(Integer.toString(player.getScore()));
-		lblCurStepstoExit.setText(Integer.toString(player.getStepsToExit()));
+		calStepsToExit();
 		lblCurSteps.setText(Integer.toString(player.getSteps()));
 		lblHealthPoints.setText(Integer.toString(player.getHealth()));
 		lblArmorPoints.setText(Integer.toString(player.getArmor()));
@@ -632,6 +660,13 @@ public class GameFrame implements KeyListener {
 		lblBossesAmount.setText(Integer.toString(bossCount));
 		lblCurExits.setText(Integer.toString(1));
 		lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
+	}
+	
+	private void calStepsToExit(){
+		AStarTraversator traverse = new AStarTraversator(this.goal, true);
+		traverse.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
+    	player.setStepsToExit(traverse.getStepsToExit());
+		lblCurStepstoExit.setText(Integer.toString(player.getStepsToExit()));
 	}
 	
 	/**
@@ -658,7 +693,7 @@ public class GameFrame implements KeyListener {
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_A && player.getColPos() > 0) {
         	if (isValidMove(player.getRowPos(), player.getColPos() - 1) && maze[player.getRowPos()][player.getColPos() - 1].isWalkable()){
-        		GameView.player_state = 5;
+        		GameView.player_state = 16;
         		player.setColPos(player.getColPos() - 1);
         		player.setSteps(player.getSteps() + 1);
         	}
@@ -681,41 +716,7 @@ public class GameFrame implements KeyListener {
         	if(player.getSpecial() <= 0) return;
 	        
         	// Creates a new search algorithm object to find the goal node
-    		Traversator traverse = null;
-        	int randNum = new Random().nextInt((7 - 0) + 1) + 0;
-        	
-        	switch(randNum){
-        		case 0:
-        			traverse = new AStarTraversator(model.getGoalNode());
-        		break;
-        		case 1:
-        			//traverse = new BasicHillClimbingTraversator(model.getGoalNode());
-	        	//break;
-        		case 2:
-        			traverse = new BeamTraversator(model.getGoalNode(), 50);
-	        	break;
-        		case 3:
-        			traverse = new BestFirstTraversator(model.getGoalNode());
-	        	break;
-        		case 4:
-        			// Slight problem with this search, over writes blocks
-        			traverse = new BruteForceTraversator(true);
-	        	break;
-        		case 5:
-        			traverse = new DepthLimitedDFSTraversator(maze.length / 2);
-	        	break;
-        		case 6:
-        			//traverse = new IDAStarTraversator(model.getGoalNode());
-	        	//break;
-        		case 7:
-        			// Does not work for some reason
-        			//traverse = new IDDFSTraversator();
-	        	//break;
-	        	default:
-	        		traverse = new AStarTraversator(model.getGoalNode());
-	        	break;
-        	}
-        	
+    		Traversator traverse = randomSearch(new Random().nextInt((7 - 0) + 1) + 0);
         	// Calls the specific traverse method contained in the class instantiated
         	traverse.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
         	player.setSearchCount(player.getSearchCount() + 1);
@@ -735,7 +736,7 @@ public class GameFrame implements KeyListener {
 	 * Checks if the player is making a valid move
 	 * @param r
 	 * @param c
-	 * @return
+	 * @return Returns true if its a valid move
 	 */
 	private boolean isValidMove(int r, int c){
 		// Error checking the move position
@@ -751,29 +752,33 @@ public class GameFrame implements KeyListener {
 				// Sword pick up, the least powerful weapon in the game
 				if(!player.getWeapon().equals("Sword")){
 					player.setWeapon("Sword");
-					player.setWeaponStrength(55);
+					player.setWeaponStrength(45);
 					maze[r][c].setNodeType('X');
+					new PlaySound("res/power_up.wav");
 				}
 			return true;
 			case '?':
 				// Help me pick up, shows the player a possible route to the goal
 				player.setSpecial(player.getSpecial() + 1);
 				maze[r][c].setNodeType('X');
+				new PlaySound("res/power_up.wav");
 			return true;
 			case 'B':
 				// A bomb pick up, very powerful bomb that kills enemies very well
-				if(!player.getWeapon().equals("Bomb")){
-					player.setWeapon("Bomb");
-					player.setWeaponStrength(75);
+				if(!player.getWeapon().equals("Shotgun")){
+					player.setWeapon("Shotgun");
+					player.setWeaponStrength(65);
 					maze[r][c].setNodeType('X');
+					new PlaySound("res/power_up.wav");
 				}
 			return true;
 			case 'H':
 				// A hydrogen bomb pick up, extremely powerful and deadly weapon
-				if(!player.getWeapon().equals("H Bomb")){
-					player.setWeapon("H Bomb");
-					player.setWeaponStrength(100);
+				if(!player.getWeapon().equals("AK-47")){
+					player.setWeapon("AK-47");
+					player.setWeaponStrength(85);
 					maze[r][c].setNodeType('X');
+					new PlaySound("res/power_up.wav");
 				}
 			return true;
 			case 'M':
@@ -783,6 +788,7 @@ public class GameFrame implements KeyListener {
 					if(player.getHealth() > 100)
 						player.setHealth(100);
 					maze[r][c].setNodeType('X');
+					new PlaySound("res/power_up.wav");
 				}
 			return true;
 			case 'A':
@@ -792,6 +798,7 @@ public class GameFrame implements KeyListener {
 					if(player.getArmor() > 100)
 						player.setArmor(100);
 					maze[r][c].setNodeType('X');
+					new PlaySound("res/power_up.wav");
 				}
 			return true;
 			case 'T':
@@ -802,9 +809,61 @@ public class GameFrame implements KeyListener {
 				maze[player.getRowPos()][player.getColPos()].setNodeType(' ');
 				maze[r][c].setNodeType('Z');
 				player.setGameOver(true);
+				new PlaySound("res/win_game.wav");
 			return true;
+			case 'N':
+				if(!player.getWeapon().equals("Pipe Bomb")){
+					player.setWeapon("Pipe Bomb");
+					player.setWeaponStrength(100);
+					maze[r][c].setNodeType('X');
+					new PlaySound("res/power_up.wav");
+				}
+			return true;
+			case 'E':
+				FuzzyBattle fuzzyBattle = new FuzzyBattle();
+				boolean enemyWon = fuzzyBattle.startBattle(player, enemies.get(maze[r][c].getEnemyID()), "fcl/battle.fcl");
+				if(enemyWon == true){
+					// The player has lost the game!
+					maze[player.getRowPos()][player.getColPos()].setNodeType(' ');
+					maze[player.getRowPos()][player.getColPos()].setEnemyID(0);
+					player.setGameOver(true);
+					maze[r][c].setNodeType('L');
+					new PlaySound("res/lose_game.wav");
+					return false;
+				}else{
+					enemies.get(maze[r][c].getEnemyID()).setHealth(0);
+					maze[r][c].setNodeType('D');
+					maze[r][c].setEnemyID(0);
+					new PlaySound("res/win_fight.wav");
+					return false;
+				}
 			default:
 			return false;
+		}
+	}
+	
+	private Traversator randomSearch(int randNum){
+		switch(0){
+			case 0:
+				return new AStarTraversator(model.getGoalNode(), false);
+			case 1:
+				return new BasicHillClimbingTraversator(model.getGoalNode());
+			case 2:
+				return new BeamTraversator(model.getGoalNode(), 50);
+			case 3:
+				return new BestFirstTraversator(model.getGoalNode());
+			case 4:
+				// Slight problem with this search, over writes blocks
+				return new BruteForceTraversator(true);
+			case 5:
+				return new DepthLimitedDFSTraversator(maze.length / 2);
+			case 6:
+				return new IDAStarTraversator(model.getGoalNode());
+			case 7:
+				// Does not work for some reason
+				return new IDDFSTraversator();
+	    	default:
+	    		return new AStarTraversator(model.getGoalNode(), false);
 		}
 	}
 	

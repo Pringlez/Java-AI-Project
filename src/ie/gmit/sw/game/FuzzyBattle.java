@@ -59,10 +59,10 @@ public class FuzzyBattle {
     	
         if(player.getHealth() <= 0){
         	player.setHealth(0);
+        	player.setGameOver(true);
         	System.out.println("Game Over!");
         	System.out.println("Player Score: " + player.getScore());
         	enemyWon = true;
-        	player.setGameOver(true);
         }
         
         if(!enemyWon){

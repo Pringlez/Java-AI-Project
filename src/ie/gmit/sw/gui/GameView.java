@@ -16,7 +16,7 @@ import ie.gmit.sw.ai.Node;
 public class GameView extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
-	private static final int IMAGE_COUNT = 16;
+	private static final int IMAGE_COUNT = 18;
 	public static final int DEFAULT_VIEW_SIZE = 800;
 	public static int player_state = 6;
 	private int cellspan = 5;	
@@ -80,10 +80,12 @@ public class GameView extends JPanel implements ActionListener {
         			if(ch == 'E'){
         				g2.setColor(Color.BLUE);
     					g2.fillRect(x1, y1, size, size);
+    					continue;
         			}
         			if(ch == 'D'){
         				g2.setColor(Color.RED);
     					g2.fillRect(x1, y1, size, size);
+    					continue;
         			}
         			if (row == currentRow && col == currentCol){
         				g2.setColor(Color.ORANGE);
@@ -137,6 +139,12 @@ public class GameView extends JPanel implements ActionListener {
 	        		case 'L':
 	        			imageIndex = 15;
 	            	break;
+	        		case 'O':
+	        			imageIndex = 16;
+	            	break;
+	        		case 'N':
+	        			imageIndex = 17;
+	            	break;
 	            	default:
 	            		imageIndex = -1;
 	            	break;
@@ -149,7 +157,7 @@ public class GameView extends JPanel implements ActionListener {
         			g2.fillRect(x1, y1, size, size);
         		}
         		
-        		if (maze[row][col].isVisited() && !maze[row][col].isGoalNode() && maze[row][col].isWalkable()){
+        		if (maze[row][col].isVisited() && !maze[row][col].isGoalNode() && maze[row][col].isWalkable() && maze[row][col].getNodeType() != 'E'){
         			g2.setColor(maze[row][col].getColor());
         			g2.fillRect(x1, y1, size, size);
         		}
@@ -183,9 +191,9 @@ public class GameView extends JPanel implements ActionListener {
 		images[0] = ImageIO.read(new java.io.File("res/hedge.png"));
 		images[1] = ImageIO.read(new java.io.File("res/sword.png"));		
 		images[2] = ImageIO.read(new java.io.File("res/help.png"));
-		images[3] = ImageIO.read(new java.io.File("res/bomb.png"));
-		images[4] = ImageIO.read(new java.io.File("res/h_bomb.png"));
-		images[5] = ImageIO.read(new java.io.File("res/player_down.png"));
+		images[3] = ImageIO.read(new java.io.File("res/shotgun.png"));
+		images[4] = ImageIO.read(new java.io.File("res/ak47.png"));
+		images[5] = ImageIO.read(new java.io.File("res/player_right.png"));
 		images[6] = ImageIO.read(new java.io.File("res/player_up.png"));
 		images[7] = ImageIO.read(new java.io.File("res/spider_down.png"));
 		images[8] = ImageIO.read(new java.io.File("res/spider_up.png"));
@@ -196,5 +204,7 @@ public class GameView extends JPanel implements ActionListener {
 		images[13] = ImageIO.read(new java.io.File("res/goal.png"));
 		images[14] = ImageIO.read(new java.io.File("res/win.png"));
 		images[15] = ImageIO.read(new java.io.File("res/lose.png"));
+		images[16] = ImageIO.read(new java.io.File("res/player_left.png"));
+		images[17] = ImageIO.read(new java.io.File("res/pipe_bomb.png"));
 	}
 }

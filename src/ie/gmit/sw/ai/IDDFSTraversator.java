@@ -15,7 +15,7 @@ public class IDDFSTraversator extends Utility implements Traversator {
 	
 	public void traverse(Node[][] maze, Node start){
 		System.out.println("\nUsing IDDFS Traversator to find goal!");
-		unvisit(maze);
+		unvisitA(maze);
 		this.maze = maze;
 		int limit = 1;
 		
@@ -26,7 +26,7 @@ public class IDDFSTraversator extends Utility implements Traversator {
 				try { //Pause before next iteration
 					Thread.sleep(500);
 		      		limit++;       		
-		      		unvisit(maze);	
+		      		unvisitA(maze);	
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}			
@@ -41,7 +41,7 @@ public class IDDFSTraversator extends Utility implements Traversator {
 		
 		if (node.isGoalNode()){
 	        time = System.currentTimeMillis() - time; //Stop the clock
-	        TraversatorStats.printStats(node, time, visitCount);
+	        TraversatorStats.printStats(node, time, visitCount, false);
 	        keepRunning = false;
 			return;
 		}

@@ -20,6 +20,7 @@ public class Node {
 	private int row = -1;
 	private int col = -1;
 	private int distance;
+	private int enemyID;
 	
 	public Node(int row, int col) {
 		this.row = row;
@@ -174,6 +175,14 @@ public class Node {
 
 	public void setNodeType(char nodeType) {
 		this.nodeType = nodeType;
+	}
+
+	public int getEnemyID() {
+		return enemyID;
+	}
+
+	public void setEnemyID(int enemyID) {
+		this.enemyID = enemyID;
 	}
 
 	public String toString() {

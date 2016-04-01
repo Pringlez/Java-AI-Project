@@ -44,7 +44,7 @@ public class Enemy extends Base implements Runnable {
 	public void run() {
 		while(true){
 			try {
-	            Thread.sleep(500);
+	            Thread.sleep(new Random().nextInt((750 - 550) + 1) + 550);
 	            checkMove(new Random().nextInt((3 - 0) + 1) + 0);
 	        } catch (InterruptedException error) {
 	            System.out.println("Error - " + error);
@@ -56,7 +56,7 @@ public class Enemy extends Base implements Runnable {
 	 * Checks if the player is making a valid move, return false if the move is invalid
 	 * @param r
 	 * @param c
-	 * @return
+	 * @return Returns true if its a valid move
 	 */
 	private boolean isValidMove(int r, int c){
 		if(player.isGameOver()) return false;
@@ -66,6 +66,8 @@ public class Enemy extends Base implements Runnable {
 			case ' ':
 				maze[getRowPos()][getColPos()].setNodeType(' ');
 				maze[r][c].setNodeType('E');
+				maze[r][c].setEnemyID(maze[getRowPos()][getColPos()].getEnemyID());
+				maze[getRowPos()][getColPos()].setEnemyID(0);
 			return true;
 			case 'P':
 				// Starting a battle with the player using the fuzzy logic library
@@ -74,16 +76,22 @@ public class Enemy extends Base implements Runnable {
 				if(enemyWon == true){
 					// The player has lost the game!
 					maze[getRowPos()][getColPos()].setNodeType(' ');
+					maze[getRowPos()][getColPos()].setEnemyID(0);
 					player.setGameOver(true);
 					maze[r][c].setNodeType('L');
+					new PlaySound("res/lose_game.wav");
 				}else{
 					maze[getRowPos()][getColPos()].setNodeType('D');
+					maze[getRowPos()][getColPos()].setEnemyID(0);
 					this.setHealth(0);
+					new PlaySound("res/win_fight.wav");
 				}
 			return enemyWon;
 			case 'T':
 				maze[getRowPos()][getColPos()].setNodeType(' ');
 				maze[r][c].setNodeType('E');
+				maze[r][c].setEnemyID(maze[getRowPos()][getColPos()].getEnemyID());
+				maze[getRowPos()][getColPos()].setEnemyID(0);
 			return true;
 			default:
 			return false;

@@ -1,19 +1,19 @@
 package ie.gmit.sw.game;
 
+import java.util.Random;
+
+import ie.gmit.sw.ai.Node;
+
 /**  
 * Maze.java - The maze class containing attributes for the maze game generation and setup
 * @author John Walsh
 * @version 1.0
 */
-import java.awt.Color;
-import java.util.Random;
-
-import ie.gmit.sw.ai.Node;
-
 public class Maze {
 	
 	private Node[][] maze;
 	private Node goal;
+	private int goalPos;
 	
 	public Maze(int rows, int cols){
 		maze = new Node[rows][cols];
@@ -22,12 +22,13 @@ public class Maze {
 		buildPaths();
 		setGoalNode();
 		unvisit();
-		addFeature('M', 'X', 3);
-		addFeature('A', 'X', 3);
-		addFeature('W', 'X', 4);
-		addFeature('?', 'X', 2);
-		addFeature('B', 'X', 3);
-		addFeature('H', 'X', 2);
+		addFeature('M', 'X', 15);
+		addFeature('A', 'X', 15);
+		addFeature('W', 'X', 50);
+		addFeature('?', 'X', 25);
+		addFeature('B', 'X', 30);
+		addFeature('H', 'X', 20);
+		addFeature('N', 'X', 10);
 	}
 	
 	/**
@@ -52,7 +53,7 @@ public class Maze {
 	 */
 	private void addFeature(char feature, char replace, int number){
 		int counter = 0;
-		while (counter < feature){
+		while (counter < number){
 			int row = (int) (maze.length * Math.random());
 			int col = (int) (maze[0].length * Math.random());
 			
@@ -73,12 +74,12 @@ public class Maze {
 				if (num >= 5 && col + 1 < maze[row].length - 1){
 					// When char is set to ' ' this means its a free path or area to walk
 					maze[row][col + 1].setNodeType(' ');
-					maze[row][col + 1].walkable = true;
+					maze[row][col + 1].setWalkable(true);
 					continue;
 				}
 				if (row + 1 < maze.length){ //Check south
 					maze[row + 1][col].setNodeType(' ');
-					maze[row + 1][col].walkable = true;
+					maze[row + 1][col].setWalkable(true);
 				}
 			}
 		}	
@@ -114,13 +115,39 @@ public class Maze {
 	 * Randomly create the goal node in the maze
 	 */
 	public void setGoalNode() {
-		Random generator = new Random();
+		
+		Random random = new Random();
+		int randRow = 0;
+		int randCol = 0;
 		boolean goalSet = false;
+		
 		while(goalSet != true){
-			int randRow = generator.nextInt(maze.length);
-			int randCol = generator.nextInt(maze[0].length);
-			randRow = randRow - 20;
-			if(randRow > 0)
+			
+			this.setGoalPos(random.nextInt((2 - 0) + 1) + 0);
+			
+			switch(this.getGoalPos()){
+				case 0:
+					// Creates the nodes on the bottom side of the maze
+					randRow = random.nextInt(((maze.length - 15) - (maze.length - 15)) + 1) + (maze.length - 15);
+					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+				break;
+				case 1:
+					// Creates the nodes on the right side of the maze
+					randRow = random.nextInt(((maze.length - 15) - 1) + 1) + 1;
+					randCol = random.nextInt(((maze[0].length - 1) - (maze[0].length - 3)) + 1) + (maze[0].length - 3);
+				break;
+				case 2:
+					// Creates the nodes on the top side of the maze
+					randRow = random.nextInt((2 - 0) + 1) + 0;
+					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+				break;
+				default:
+					randRow = random.nextInt(((maze.length - 15) - 1) + 1) + 1;
+					randCol = random.nextInt(((maze[0].length - 1) - (maze[0].length - 3)) + 1) + (maze[0].length - 3);
+				break;
+			}
+			
+			try {
 				if(maze[randRow][randCol].isWalkable()){
 					maze[randRow][randCol].setGoalNode(true);
 					maze[randRow][randCol].setNodeType('G');
@@ -128,6 +155,8 @@ public class Maze {
 					goal = maze[randRow][randCol];
 					goalSet = true;
 				}
+			} catch (Exception e) {
+			}
 		}
 	}
 	
@@ -139,7 +168,6 @@ public class Maze {
 			for (int j = 0; j < maze[i].length; j++){
 				maze[i][j].setVisited(false);
 				maze[i][j].setParent(null);
-				maze[i][j].setColor(Color.LIGHT_GRAY);
 			}
 		}
 	}
@@ -152,6 +180,14 @@ public class Maze {
 		return this.maze;
 	}
 	
+	public int getGoalPos() {
+		return goalPos;
+	}
+
+	public void setGoalPos(int goalPos) {
+		this.goalPos = goalPos;
+	}
+
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
 		for (int row = 0; row < maze.length; row++){

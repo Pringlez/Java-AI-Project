@@ -13,14 +13,24 @@ public abstract class Utility {
 	 * Sets the nodes back to their default values
 	 * @param maze The node maze array object
 	 */
-	public void unvisit(Node[][] maze){
+	public void unvisitA(Node[][] maze){
 		for (int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[i].length; j++){
 				maze[i][j].setVisited(false);
-				if(maze[i][j].getNodeType() == 'T')
-					maze[i][j].setNodeType(' ');
 				maze[i][j].setParent(null);
-				maze[i][j].setColor(Color.LIGHT_GRAY);
+				if(maze[i][j].getNodeType() == 'T'){
+					maze[i][j].setNodeType(' ');
+					maze[i][j].setColor(Color.LIGHT_GRAY);
+				}
+			}
+		}
+	}
+	
+	public void unvisitB(Node[][] maze){
+		for (int i = 0; i < maze.length; i++){
+			for (int j = 0; j < maze[i].length; j++){
+				maze[i][j].setVisited(false);
+				maze[i][j].setParent(null);
 			}
 		}
 	}
