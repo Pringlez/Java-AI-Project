@@ -43,7 +43,6 @@ public class GameFrame implements KeyListener {
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private Node[][] maze;
-	private Node goal;
 	
 	// Left panel elements
 	JLabel lblCurScore;
@@ -375,6 +374,8 @@ public class GameFrame implements KeyListener {
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+					// Kill the other threads here
+					killEnemyThreads();
 					gameFrame.getContentPane().remove(gamePanel);
 					newGame(gameDifficulty2.getSelectedItem().toString());
 					lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
@@ -473,7 +474,7 @@ public class GameFrame implements KeyListener {
 		
 		switch(gameDifficulty){
 			case "Easy":
-				amount = 20;
+				amount = 35;
 				health = random.nextInt((60 - 25) + 1) + 25;
 				armor = random.nextInt((35 - 5) + 1) + 5;
 				strength = random.nextInt((60 - 30) + 1) + 30;
@@ -481,7 +482,7 @@ public class GameFrame implements KeyListener {
 				bosses = 1;
 			break;
 			case "Normal":
-				amount = 35;
+				amount = 50;
 				health = random.nextInt((75 - 55) + 1) + 55;
 				armor = random.nextInt((45 - 25) + 1) + 25;
 				strength = random.nextInt((70 - 30) + 1) + 30;
@@ -489,15 +490,15 @@ public class GameFrame implements KeyListener {
 				bosses = 2;
 			break;
 			case "Hard":
-				amount = 50;
+				amount = 75;
 				health = random.nextInt((100 - 40) + 1) + 40;
 				armor = random.nextInt((75 - 50) + 1) + 50;
 				strength = random.nextInt((80 - 30) + 1) + 30;
 				difficulty = 2;
-				bosses = 3;
+				bosses = 5;
 			break;
 			default:
-				amount = 20;
+				amount = 50;
 				health = random.nextInt((75 - 55) + 1) + 55;
 				armor = random.nextInt((45 - 25) + 1) + 25;
 				strength = random.nextInt((70 - 30) + 1) + 30;
@@ -526,6 +527,7 @@ public class GameFrame implements KeyListener {
 			enemies.get(i).setMaze(maze);
 			enemies.get(i).setPlayer(player);
 			enemies.get(i).setAlgorithm(random.nextInt((2 - 0) + 1) + 0);
+			enemies.get(i).setRun(true);
 			
 			boolean enemyPosSet = false;
 			
@@ -559,7 +561,6 @@ public class GameFrame implements KeyListener {
 	private void newGame(String gameDifficulty) {
 		
 		model = new Maze(MAZE_DIMENSION, MAZE_DIMENSION);
-		this.goal = model.getGoalNode();
 		maze = model.getMaze();
 		
 		try {
@@ -603,12 +604,12 @@ public class GameFrame implements KeyListener {
 					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
 				break;
 				case 1:
-					// Creates the nodes on the left side of the maze
+					// Creates the player on the left side of the maze
 					randRow = random.nextInt(((maze.length - 15) - 1) + 1) + 1;
 					randCol = random.nextInt((2 - 0) + 1) + 0;
 				break;
 				case 2:
-					// Creates the nodes on the bottom side of the maze
+					// Creates the player on the bottom side of the maze
 					randRow = random.nextInt(((maze.length - 15) - (maze.length - 15)) + 1) + (maze.length - 15);
 					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
 				break;
@@ -663,7 +664,7 @@ public class GameFrame implements KeyListener {
 	}
 	
 	private void calStepsToExit(){
-		AStarTraversator traverse = new AStarTraversator(this.goal, true);
+		AStarTraversator traverse = new AStarTraversator(model.getGoalNode(), true);
 		traverse.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
     	player.setStepsToExit(traverse.getStepsToExit());
 		lblCurStepstoExit.setText(Integer.toString(player.getStepsToExit()));
@@ -682,7 +683,7 @@ public class GameFrame implements KeyListener {
 	 * Check what key the user presses and executes the code / methods if a valid button is pressed
 	 */
     public void keyPressed(KeyEvent e){
-    	if(player.isGameOver()) return;
+    	if(player == null || player.isGameOver()) return;
     	
     	// Check here if the block is a bomb or weapon etc
         if (e.getKeyCode() == KeyEvent.VK_D && player.getColPos() < MAZE_DIMENSION - 1) {
@@ -714,11 +715,13 @@ public class GameFrame implements KeyListener {
         }else if (e.getKeyCode() == KeyEvent.VK_K){
         	// Fire Special Weapon!!
         	if(player.getSpecial() <= 0) return;
-	        
         	// Creates a new search algorithm object to find the goal node
-    		Traversator traverse = randomSearch(new Random().nextInt((7 - 0) + 1) + 0);
+    		//Traversator traverse = randomSearch(new Random().nextInt((7 - 0) + 1) + 0);
+    		Traversator traverse = randomSearch(0);
         	// Calls the specific traverse method contained in the class instantiated
+        	//AStarTraversator traverse = new AStarTraversator(maze[player.getRowPos()][player.getColPos()], false);
         	traverse.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
+        	//System.out.println("Search good?: " + traverse.isFoundGoal());
         	player.setSearchCount(player.getSearchCount() + 1);
         	player.setSpecial(player.getSpecial() - 1);
     	}
@@ -843,11 +846,12 @@ public class GameFrame implements KeyListener {
 	}
 	
 	private Traversator randomSearch(int randNum){
-		switch(0){
+		// Selecting a random algorithm to be created and returned
+		switch(randNum){
 			case 0:
 				return new AStarTraversator(model.getGoalNode(), false);
 			case 1:
-				return new BasicHillClimbingTraversator(model.getGoalNode());
+				//return new BasicHillClimbingTraversator(model.getGoalNode());
 			case 2:
 				return new BeamTraversator(model.getGoalNode(), 50);
 			case 3:
@@ -856,14 +860,22 @@ public class GameFrame implements KeyListener {
 				// Slight problem with this search, over writes blocks
 				return new BruteForceTraversator(true);
 			case 5:
-				return new DepthLimitedDFSTraversator(maze.length / 2);
+				//return new DepthLimitedDFSTraversator(maze.length / 2);
 			case 6:
 				return new IDAStarTraversator(model.getGoalNode());
 			case 7:
 				// Does not work for some reason
-				return new IDDFSTraversator();
+				//return new IDDFSTraversator();
 	    	default:
 	    		return new AStarTraversator(model.getGoalNode(), false);
+		}
+	}
+	
+	private void killEnemyThreads() {
+		if(enemies.size() <= 0) return;
+		for(int i = 0; i < enemies.size(); i++){
+			enemies.get(i).setHealth(0);
+			enemies.get(i).setRun(false);
 		}
 	}
 	

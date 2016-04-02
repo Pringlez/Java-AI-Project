@@ -39,8 +39,7 @@ public class FuzzyBattle {
         fis.evaluate();
 
         Variable survivability = functionBlock.getVariable("survivability");
-        //System.out.println("Default Value: " + survivability.getDefaultValue());
-        System.out.println("Survivability Percentage: " + survivability.getValue() + "%");
+        System.out.println("\nSurvivability Percentage: " + (int)survivability.getValue() + "%");
         
         boolean enemyWon = false;
         

@@ -20,6 +20,7 @@ public class Enemy extends Base implements Runnable {
 	private Thread instance;
 	private Node[][] maze;
 	private Player player;
+	private boolean run;
 	
 	// Idea: Make enemy walk only when the player walks
 	
@@ -42,7 +43,7 @@ public class Enemy extends Base implements Runnable {
 	
 	@Override
 	public void run() {
-		while(true){
+		while(isRun()){
 			try {
 	            Thread.sleep(new Random().nextInt((750 - 550) + 1) + 550);
 	            checkMove(new Random().nextInt((3 - 0) + 1) + 0);
@@ -195,5 +196,13 @@ public class Enemy extends Base implements Runnable {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public boolean isRun() {
+		return run;
+	}
+
+	public void setRun(boolean run) {
+		this.run = run;
 	}
 }

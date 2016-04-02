@@ -11,7 +11,7 @@ public class Node {
 	
 	public enum Direction {North, South, East, West};
 	private Node parent;
-	private Color color = Color.LIGHT_GRAY;
+	private Color color;
 	private Direction[] paths = null;
 	public boolean visited =  false;
 	public boolean goal;

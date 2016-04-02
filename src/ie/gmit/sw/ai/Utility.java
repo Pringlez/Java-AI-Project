@@ -18,7 +18,7 @@ public abstract class Utility {
 			for (int j = 0; j < maze[i].length; j++){
 				maze[i][j].setVisited(false);
 				maze[i][j].setParent(null);
-				if(maze[i][j].getNodeType() == 'T'){
+				if(maze[i][j].getNodeType() == 'T' || maze[i][j].getNodeType() == ' '){
 					maze[i][j].setNodeType(' ');
 					maze[i][j].setColor(Color.LIGHT_GRAY);
 				}

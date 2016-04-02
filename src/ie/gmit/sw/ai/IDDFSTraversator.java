@@ -23,13 +23,9 @@ public class IDDFSTraversator extends Utility implements Traversator {
 			dfs(start, 0, limit);
 			
 			if (keepRunning){
-				try { //Pause before next iteration
-					Thread.sleep(500);
-		      		limit++;       		
-		      		unvisitA(maze);	
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}			
+				sleep(1);
+	      		limit++;       		
+	      		//unvisitA(maze);			
 			}
       	}
 	}

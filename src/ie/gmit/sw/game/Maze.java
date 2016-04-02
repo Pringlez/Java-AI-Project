@@ -128,22 +128,22 @@ public class Maze {
 			switch(this.getGoalPos()){
 				case 0:
 					// Creates the nodes on the bottom side of the maze
-					randRow = random.nextInt(((maze.length - 15) - (maze.length - 15)) + 1) + (maze.length - 15);
-					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+					randRow = random.nextInt(((maze.length - 15) - (maze.length - 16)) + 1) + (maze.length - 16);
+					randCol = random.nextInt(((maze[0].length - 3) - 1) + 1) + 1;
 				break;
 				case 1:
 					// Creates the nodes on the right side of the maze
 					randRow = random.nextInt(((maze.length - 15) - 1) + 1) + 1;
-					randCol = random.nextInt(((maze[0].length - 1) - (maze[0].length - 3)) + 1) + (maze[0].length - 3);
+					randCol = random.nextInt(((maze[0].length - 3) - (maze[0].length - 4)) + 1) + (maze[0].length - 4);
 				break;
 				case 2:
 					// Creates the nodes on the top side of the maze
-					randRow = random.nextInt((2 - 0) + 1) + 0;
-					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+					randRow = random.nextInt((2 - 1) + 1) + 1;
+					randCol = random.nextInt(((maze[0].length - 3) - 1) + 1) + 1;
 				break;
 				default:
 					randRow = random.nextInt(((maze.length - 15) - 1) + 1) + 1;
-					randCol = random.nextInt(((maze[0].length - 1) - (maze[0].length - 3)) + 1) + (maze[0].length - 3);
+					randCol = random.nextInt(((maze[0].length - 3) - (maze[0].length - 4)) + 1) + (maze[0].length - 4);
 				break;
 			}
 			

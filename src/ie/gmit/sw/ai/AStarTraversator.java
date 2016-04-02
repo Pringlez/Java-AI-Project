@@ -13,6 +13,7 @@ public class AStarTraversator extends Utility implements Traversator {
 	private Node goal;
 	private int stepsToExit;
 	private boolean countSteps;
+	private boolean foundGoal;
 	
 	public AStarTraversator(Node goal, boolean countSteps){
 		this.goal = goal;
@@ -20,10 +21,13 @@ public class AStarTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
-		if(!countSteps)
+		if(!countSteps){
 			System.out.println("\nUsing A Star Traversator to find goal!");
+			unvisitA(maze);
+		}else{
+			unvisitB(maze);
+		}
 		
-		unvisitA(maze);
         long time = System.currentTimeMillis();
     	int visitCount = 0;
     	
@@ -40,7 +44,8 @@ public class AStarTraversator extends Utility implements Traversator {
 			
 			if (node.isGoalNode()){
 		        time = System.currentTimeMillis() - time; //Stop the clock
-		        this.setStepsToExit(TraversatorStats.printStats(node, time, visitCount, this.countSteps));
+		        setStepsToExit(TraversatorStats.printStats(node, time, visitCount, countSteps));
+		        setFoundGoal(true);
 				break;
 			}
 			
@@ -73,5 +78,13 @@ public class AStarTraversator extends Utility implements Traversator {
 
 	public void setStepsToExit(int stepsToExit) {
 		this.stepsToExit = stepsToExit;
+	}
+
+	public boolean isFoundGoal() {
+		return foundGoal;
+	}
+
+	public void setFoundGoal(boolean foundGoal) {
+		this.foundGoal = foundGoal;
 	}
 }
