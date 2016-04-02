@@ -374,13 +374,7 @@ public class GameFrame implements KeyListener {
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					// Kill the other threads here
-					killEnemyThreads();
-					gameFrame.getContentPane().remove(gamePanel);
-					newGame(gameDifficulty2.getSelectedItem().toString());
-					lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
-					gameFrame.repaint();
-					player.setGameOver(false);
+					initNewGame(gameDifficulty2.getSelectedItem().toString());
 				} catch (Exception error) {
 					System.out.println("Error - " + error);
 				}
@@ -448,6 +442,9 @@ public class GameFrame implements KeyListener {
 				gameDifficulty2.setSelectedIndex(gameDifficulty1.getSelectedIndex());
 				lblCurDifficulty.setText(gameDifficulty1.getSelectedItem().toString());
 				gameFrame.repaint();
+				// Making sure if the player block is suitable to search for the amount of steps to goal
+				if(player.getStepsToExit() <= 0)
+					initNewGame(gameDifficulty1.getSelectedItem().toString());
 			}
 		});
 		btnNewGame.setFont(new Font("Serif", Font.BOLD, 24));
@@ -531,18 +528,13 @@ public class GameFrame implements KeyListener {
 			
 			boolean enemyPosSet = false;
 			
-			int row;
-			int col;
-			
 			// Continue to loop until a good position is found
 			while(enemyPosSet != true){
-				row = (int) (MAZE_DIMENSION * Math.random());
-				col = (int) (MAZE_DIMENSION * Math.random());
+				enemies.get(i).setRowPos((int)(MAZE_DIMENSION * Math.random()));
+				enemies.get(i).setColPos((int)(MAZE_DIMENSION * Math.random()));
 				
 				// Checking if the area is walkable, if true then place enemy
-		    	if(maze[row][col].isWalkable()){
-		    		enemies.get(i).setRowPos(row);
-		    		enemies.get(i).setColPos(col);
+		    	if(maze[enemies.get(i).getRowPos()][enemies.get(i).getColPos()].isWalkable()){
 			    	maze[enemies.get(i).getRowPos()][enemies.get(i).getColPos()].setNodeType('E');
 			    	maze[enemies.get(i).getRowPos()][enemies.get(i).getColPos()].setEnemyID(i);
 			    	enemyPosSet = true;
@@ -552,6 +544,23 @@ public class GameFrame implements KeyListener {
 			isBoss = false;
 			thread.start();
 		}
+	}
+	
+	/**
+	 * Initializing the game to start
+	 * @param gameDifficulty
+	 */
+	private void initNewGame(String gameDifficulty) {
+		// Kill the other threads here
+		killEnemyThreads();
+		gameFrame.getContentPane().remove(gamePanel);
+		newGame(gameDifficulty2.getSelectedItem().toString());
+		lblCurDifficulty.setText(gameDifficulty);
+		gameFrame.repaint();
+		player.setGameOver(false);
+		// Making sure if the player block is suitable to search for the amount of steps to goal
+		if(player.getStepsToExit() <= 0)
+			initNewGame(gameDifficulty);
 	}
 	
 	/**
@@ -590,8 +599,6 @@ public class GameFrame implements KeyListener {
 		player.setWeapon("Unarmed");
 		
 		Random random = new Random();
-		int randRow = 0;
-		int randCol = 0;
 		boolean playerPosSet = false;
 		
 		// Continue to loop until a good position is found
@@ -600,30 +607,30 @@ public class GameFrame implements KeyListener {
 			switch(goalPos){
 				case 0:
 					// Creates the player on the top side of the maze
-					randRow = random.nextInt((2 - 0) + 1) + 0;
-					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+					player.setRowPos(random.nextInt((3 - 2) + 1) + 2);
+					player.setColPos(random.nextInt((maze[0].length - 5) + 1) + 5);
 				break;
 				case 1:
 					// Creates the player on the left side of the maze
-					randRow = random.nextInt(((maze.length - 15) - 1) + 1) + 1;
-					randCol = random.nextInt((2 - 0) + 1) + 0;
+					player.setRowPos(random.nextInt(((maze.length - 15) - 1) + 1) + 1);
+					player.setColPos(random.nextInt((3 - 2) + 1) + 2);
 				break;
 				case 2:
 					// Creates the player on the bottom side of the maze
-					randRow = random.nextInt(((maze.length - 15) - (maze.length - 15)) + 1) + (maze.length - 15);
-					randCol = random.nextInt((maze[0].length - 5) + 1) + 5;
+					player.setRowPos(random.nextInt(((maze.length - 15) - (maze.length - 15)) + 1) + (maze.length - 15));
+					player.setColPos(random.nextInt((maze[0].length - 5) + 1) + 5);
 				break;
 				default:
-					randRow = random.nextInt((2 - 0) + 1) + 0;
-					randCol = random.nextInt(((maze[0].length - 1) - (maze[0].length - 3)) + 1) + (maze[0].length - 3);
+					player.setRowPos(random.nextInt(((maze.length - 15) - 1) + 1) + 1);
+					player.setColPos(random.nextInt((3 - 2) + 1) + 2);
 				break;
 			}
 			
+			//calStepsToExit();
+			
 			// Checking if the area is walkable, if true then place the player
 	    	try {
-				if(maze[randRow][randCol].isWalkable()){
-					player.setRowPos(randRow);
-					player.setColPos(randCol);
+				if(maze[player.getRowPos()][player.getColPos()].isWalkable()){
 					maze[player.getRowPos()][player.getColPos()].setNodeType('P');
 					playerPosSet = true;
 				}
@@ -664,6 +671,7 @@ public class GameFrame implements KeyListener {
 	}
 	
 	private void calStepsToExit(){
+		//Calculating the step to the goal node
 		AStarTraversator traverse = new AStarTraversator(model.getGoalNode(), true);
 		traverse.traverse(maze, maze[player.getRowPos()][player.getColPos()]);
     	player.setStepsToExit(traverse.getStepsToExit());

@@ -143,6 +143,7 @@ public class Node {
 
 	public void setVisited(boolean visited) {
 		this.visited = visited;
+		this.color = Color.BLACK;
 	}
 
 	public boolean isGoalNode() {
