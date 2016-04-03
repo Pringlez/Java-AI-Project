@@ -19,13 +19,12 @@ public class Maze {
 		maze = new Node[rows][cols];
 		init();
 		buildMaze();
-		//buildNodePaths();
 		setGoalNode();
 		unvisit();
 		addFeature('M', 'X', 15);
 		addFeature('A', 'X', 15);
 		addFeature('W', 'X', 50);
-		addFeature('?', 'X', 25);
+		addFeature('?', 'X', 30);
 		addFeature('B', 'X', 30);
 		addFeature('H', 'X', 20);
 		addFeature('N', 'X', 10);
@@ -89,7 +88,7 @@ public class Maze {
 	/**
 	 * Generates the paths found next to each node in the maze
 	 */
-	private void buildNodePaths(){ // Need to change name because....of nig
+	private void buildNodePaths(){
 		for (int row = 0; row < maze.length; row++){
 			for (int col = 0; col < maze[row].length - 1; col++){
 				if(col < maze[row].length - 1)

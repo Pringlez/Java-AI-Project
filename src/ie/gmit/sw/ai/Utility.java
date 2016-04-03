@@ -26,6 +26,10 @@ public abstract class Utility {
 		}
 	}
 	
+	/**
+	 * Sets the nodes back to their default values
+	 * @param maze The node maze array object
+	 */
 	public void unvisitB(Node[][] maze){
 		for (int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[i].length; j++){
