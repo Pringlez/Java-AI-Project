@@ -11,19 +11,30 @@ import java.util.*;
 public class AStarTraversator extends Utility implements Traversator {
 	
 	private Node goal;
+	private Node pathGoal;
 	private int stepsToExit;
 	private boolean countSteps;
 	private boolean foundGoal;
+	private boolean enemySearch;
 	
 	public AStarTraversator(Node goal, boolean countSteps){
 		this.goal = goal;
 		this.countSteps = countSteps;
 	}
 	
+	public AStarTraversator(Node goal, boolean countSteps, boolean enemySearch){
+		this.goal = goal;
+		this.countSteps = countSteps;
+		this.enemySearch = enemySearch;
+	}
+	
 	public void traverse(Node[][] maze, Node node){
-		if(!countSteps){
-			System.out.println("\nUsing A Star Traversator to find goal!");
+		if(!countSteps && !enemySearch){
+			System.out.println("\nUsing A Star Traversator - Looking for maze exit!");
 			unvisitA(maze);
+		}else if(enemySearch){
+			System.out.println("\nUsing A Star Traversator - Enemy is looking for player!");
+			unvisitB(maze);
 		}else{
 			unvisitB(maze);
 		}
@@ -42,10 +53,15 @@ public class AStarTraversator extends Utility implements Traversator {
 			node.setVisited(true);
 			visitCount++;
 			
-			if (node.isGoalNode()){
+			if (node.isGoalNode() && node.getNodeType() != 'P' && !enemySearch){
 		        time = System.currentTimeMillis() - time; //Stop the clock
 		        setStepsToExit(TraversatorStats.printStats(node, time, visitCount, countSteps));
 		        setFoundGoal(true);
+		        setPathGoal(node);
+				break;
+			}else if(node.isGoalNode() && node.getNodeType() == 'P' && enemySearch){
+				setFoundGoal(true);
+		        setPathGoal(node);
 				break;
 			}
 			
@@ -86,5 +102,21 @@ public class AStarTraversator extends Utility implements Traversator {
 
 	public void setFoundGoal(boolean foundGoal) {
 		this.foundGoal = foundGoal;
+	}
+
+	public Node getPathGoal() {
+		return pathGoal;
+	}
+
+	public void setPathGoal(Node pathGoal) {
+		this.pathGoal = pathGoal;
+	}
+
+	public boolean isEnemySearch() {
+		return enemySearch;
+	}
+
+	public void setEnemySearch(boolean enemySearch) {
+		this.enemySearch = enemySearch;
 	}
 }
