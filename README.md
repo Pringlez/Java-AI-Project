@@ -6,6 +6,7 @@ Project Details
 0. The project utilizes different search algorithms like A-star, DFS, Brute Force and such to find a specific goal node randomly placed in a 2d maze.
 0. The game also has different pickup items like weapons, health and armor to help the player navigate safely to the goal node. These items are randomly placed around the maze.
 0. Enemies are also navigating the maze to find and kill the player, the boss enemies will implement the A* search algorithm to detect and destroy the player when within 60 steps of the maze’s exit goal.
+0. The battle system between the enemies and the player uses the fuzzy logic API 'jFuzzyLogic.jar' found in the 'lib' folder. To improve your survivability chance make sure to keep your health and armor topped up and pickup a good weapon!. View the console output after a battle for more information.
 
 To Run the Game
 ---------------
@@ -94,4 +95,4 @@ The common enemy is can be easily taken down by standard weapon like the sword, 
 #### Boss Enemy
 The boss enemy will destroy you in one hit, run like hell!. Note these enemies at first will be walk randomly around the maze like dumb creatures. But once you come within 60 steps of the maze's exit goal watch out, these guys will hunt you down!.
 
-![alt text](/res/spider_boss_down.png "Boss Enemy")
+![alt text](/res/boss_spider_down.png "Boss Enemy")
