@@ -35,7 +35,7 @@ Game Features & Items
 ---------------------
 There is a number of different items placed throughout the maze, weapons, health, armor and a direction helper item. Keep an eye on your health and armor, you can only take a couple of hits from common enemies before you'll need to find some health and armor pickups. Killing a common enemy scores you 25 points, try and beat your friend’s highest score!
 
-The direction helper item uses the A* search algorithm to compute the number of steps from the player position to the goal. Below is a list of items and their effects.
+The direction helper item uses the A* search algorithm to compute the number of steps from the player position to the goal.
 
 ### Items
 Below you'll find details about the different items implemented into the game.
