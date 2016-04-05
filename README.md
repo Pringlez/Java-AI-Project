@@ -5,8 +5,9 @@ Project Details
 ---------------
 0. The project utilizes different search algorithms like A-star, DFS, Brute Force and such to find a specific goal node randomly placed in a 2d maze.
 0. The game also has different pickup items like weapons, health and armor to help the player navigate safely to the goal node. These items are randomly placed around the maze.
-0. Enemies are also navigating the maze to find and kill the player, the boss enemies will implement the A* search algorithm to detect and destroy the player when within 60 steps of the maze’s exit goal.
-0. The battle system between the enemies and the player uses the fuzzy logic API 'jFuzzyLogic.jar' found in the 'lib' folder. To improve your survivability chance make sure to keep your health and armor topped up and pickup a good weapon!. View the console output after a battle for more information.
+0. Enemies are also navigating the maze to find and kill the player, the boss enemies implements the A* search algorithm to detect and destroy the player when within 60 steps of the maze’s exit goal.
+0. The battle system between the enemies and the player uses the fuzzy logic API 'jFuzzyLogic.jar' found in the 'lib' folder. To improve your survivability chance make sure to keep your health and armor topped up and pick up a good weapon!. View the console output after a battle for more information.
+0. I've also included the ant build file if you wish to edit and recompile the source.
 
 To Run the Game
 ---------------
@@ -15,6 +16,8 @@ Run the following command to start the maze game.
 ```
 java –cp ./mazegame.jar ie.gmit.sw.Runner
 ```
+
+Note: Make sure to include both the 'fcl' & 'res' folders when running the game. Review details about fuzzy battles and search algorithms in the console output log.
 
 How to Play
 -----------
@@ -30,6 +33,8 @@ How to control the game character:
 * Use Special Pick Up: K
 
 The special pick up item displays on screen a suitable path for the player to follow. Beware, in the background the game randomly chooses a search algorithm to find the goal node in the maze. Not every search algorithm is optimized and complete so beware of wild goose chases and dead ends!
+
+Use the zoom out function to view the behavior of the pink blocks in the maze, these guys are the boss enemies. Once you get within 60 steps of the goal node they will switch from a random walk algorithm to the A* search algorithm to hunt you down! The red blocks in the maze are common enemies. These guys will randomly walk around and fight you if you get too close! The player block is colored gold in the maze when you use the zoom out function.
 
 Game Features & Items
 ---------------------
@@ -92,7 +97,11 @@ The common enemy is can be easily taken down by standard weapon like the sword, 
 
 ![alt text](/res/spider_down.png "Common Enemy")
 
+Color in Maze: Red Block
+
 #### Boss Enemy
-The boss enemy will destroy you in one hit, run like hell!. Note these enemies at first will be walk randomly around the maze like dumb creatures. But once you come within 60 steps of the maze's exit goal watch out, these guys will hunt you down!.
+The boss enemy will hit harder then common enemies. Note these enemies at first will be walk randomly around the maze like dumb creatures. But once you come within 60 steps of the maze's exit goal watch out, these guys will hunt you down!.
 
 ![alt text](/res/boss_spider_down.png "Boss Enemy")
+
+Color in Maze: Pink Block

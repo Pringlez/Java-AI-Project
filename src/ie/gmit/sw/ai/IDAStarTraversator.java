@@ -18,7 +18,7 @@ public class IDAStarTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node start){
-		System.out.println("\nUsing IDA Star Traversator to find goal!");
+		System.out.println("Using IDA Star Traversator - Looking for Maze Exit Goal!\n");
 		unvisitA(maze);
 		this.maze = maze;
 		time = System.currentTimeMillis();
@@ -62,7 +62,7 @@ public class IDAStarTraversator extends Utility implements Traversator {
 		
 		int f = g + node.getHeuristic(goal);
 		if (f > bound) return f;
-		if (node.isGoalNode()) return Integer.MIN_VALUE; //Denotes found
+		if (node.isGoalNode() && node.nodeType != 'P') return Integer.MIN_VALUE; //Denotes found
 		int min = Integer.MAX_VALUE; //Denotes not found
 		
 		Node[] children = node.children(maze);

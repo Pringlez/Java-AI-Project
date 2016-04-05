@@ -19,7 +19,7 @@ public class DepthLimitedDFSTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
-		System.out.println("\nUsing Depth Limited DFS Traversator to find goal!");
+		System.out.println("Using Depth Limited DFS Traversator - Looking for Maze Exit Goal!\n");
 		unvisitA(maze);
 		this.maze = maze;
 		System.out.println("Search with limit " + limit);
@@ -32,7 +32,7 @@ public class DepthLimitedDFSTraversator extends Utility implements Traversator {
 		node.setVisited(true);	
 		visitCount++;
 		
-		if (node.isGoalNode()){
+		if (node.isGoalNode() && node.nodeType != 'P'){
 	        time = System.currentTimeMillis() - time; //Stop the clock
 	        TraversatorStats.printStats(node, time, visitCount, false);
 	        keepRunning = false;

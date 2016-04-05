@@ -15,7 +15,7 @@ public class BasicHillClimbingTraversator extends Utility implements Traversator
 	}
 	
 	public void traverse(Node[][] maze, Node node){
-		System.out.println("\nUsing Basic Hill Climbing Traversator to find goal!");
+		System.out.println("Using Basic Hill Climbing Traversator - Looking for Maze Exit Goal!\n");
 		unvisitA(maze);
         long time = System.currentTimeMillis();
     	int visitCount = 0;
@@ -25,7 +25,7 @@ public class BasicHillClimbingTraversator extends Utility implements Traversator
 			node.setVisited(true);	
 			visitCount++;
 			
-			if (node.isGoalNode()){
+			if (node.isGoalNode() && node.nodeType != 'P'){
 		        time = System.currentTimeMillis() - time; //Stop the clock
 		        TraversatorStats.printStats(node, time, visitCount, false);
 				break;

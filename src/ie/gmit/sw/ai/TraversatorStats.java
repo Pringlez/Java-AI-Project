@@ -31,9 +31,9 @@ public class TraversatorStats {
 		
 		if(debug){
 			if(!countSteps){
-		        System.out.println("\nVisited " + visitCount + " nodes in " + time + "ms.");
+		        System.out.println("Visited " + visitCount + " nodes in " + time + "ms.");
 		        System.out.println("Found goal at a depth of " + String.format("%.0f", depth));
-		        System.out.println("EBF = B* = k^(1/d) = " + String.format("%.2f", Math.pow((double) visitCount, (1.00d / depth))));
+		        System.out.println("EBF = B* = k^(1/d) = " + String.format("%.2f\n", Math.pow((double) visitCount, (1.00d / depth))));
 			}
 		}
 		

@@ -32,8 +32,6 @@ public class Enemy extends Base implements Runnable {
 	private AStarTraversator traverse;
 	private LinkedList<Node> nodeListPath;
 	
-	// Idea: Make enemy walk only when the player walks
-	
 	public Enemy() {
 		super();
 		setStrength(0);
@@ -55,6 +53,11 @@ public class Enemy extends Base implements Runnable {
 	public void run() {
 		while(isRun()){
 			try {
+				if(this.getHealth() <= 0 || getPlayer().isGameOver()){
+					setRun(false);
+					break;
+				}
+				// Make the thread sleep, its different for every enemy making enemies slightly faster or slower
 	            Thread.sleep(new Random().nextInt((getMaxUpdateTime() - getMinUpdateTime()) + 1) + getMinUpdateTime());
 	            switch(getAlgorithm()){
 	            	case 0:
@@ -86,6 +89,7 @@ public class Enemy extends Base implements Runnable {
 		
 		switch(getMaze()[r][c].getNodeType()){
 			case ' ':
+				// Moving the enemy to an empty block
 				getMaze()[getRowPos()][getColPos()].setNodeType(' ');
 				getMaze()[r][c].setNodeType('E');
 				if(this.isBoss())
@@ -103,15 +107,18 @@ public class Enemy extends Base implements Runnable {
 					getMaze()[getRowPos()][getColPos()].setEnemyID(0);
 					getPlayer().setGameOver(true);
 					getMaze()[r][c].setNodeType('L');
-					new PlaySound("res/lose_game.wav");
+					PlaySound.play("res/lose_game.wav");
 				}else{
 					getMaze()[getRowPos()][getColPos()].setNodeType('D');
+					if(this.isBoss())
+						getMaze()[getRowPos()][getColPos()].setNodeType('L');
 					getMaze()[getRowPos()][getColPos()].setEnemyID(0);
 					this.setHealth(0);
-					new PlaySound("res/win_fight.wav");
+					PlaySound.play("res/win_fight.wav");
 				}
 			return enemyWon;
 			case 'T':
+				// Moving enemy over a path to goal node, removing the 'This Way!' block
 				getMaze()[getRowPos()][getColPos()].setNodeType(' ');
 				getMaze()[r][c].setNodeType('E');
 				if(this.isBoss())
@@ -177,6 +184,11 @@ public class Enemy extends Base implements Runnable {
 			return;
 		}
 		
+		/*
+		 * If the player has move since the last known location then re-compute
+		 * the path to the current player position
+		 * If the player hasn't moved then use the current calculated position
+		 */
 		if(getPlayerRowT() != getPlayer().getRowPos() || getPlayerColT() != getPlayer().getColPos()){
 			setMinUpdateTime(400);
 			setMaxUpdateTime(500);
@@ -185,24 +197,31 @@ public class Enemy extends Base implements Runnable {
 			setPlayerColT(getPlayer().getColPos());
 			setTraverse(new AStarTraversator(getMaze()[getPlayer().getRowPos()][getPlayer().getColPos()], false, true));
 			getTraverse().traverse(getMaze(), getMaze()[getRowPos()][getColPos()]);
+			// If the search algorithm has found the player then add paths to linked list
 			if(getTraverse().isFoundGoal()){
 				setPathGoal(getTraverse().getPathGoal());
 				while (getPathGoal() != null){
 					getNodeListPath().add(getPathGoal());
 					setPathGoal(getPathGoal().getParent());
 				}
+				// Revering the collection of paths to the player location & remove enemy node from list
 				Collections.reverse(getNodeListPath());
 				getNodeListPath().removeFirst();
 			}
 		}
 		
+		// If the path has been found then start moving the enemy towards the player
 		if(getTraverse().isFoundGoal()){
 			
 			Node nextPath = getNodeListPath().poll();
 			boolean foundNextPath = false;
 			
+			/*
+			 * Continue to loop until the correct position to move to is found
+			 * If the correct move is found then break the current iteration
+			 */
 			while (nextPath != null && !foundNextPath){
-				
+				// Moving enemy up in the maze
 				if(nextPath.getRow() == (getRowPos() - 1)){
 					if (isValidMove(getRowPos() - 1, getColPos())){
 						setRowPos(getRowPos() - 1);
@@ -210,6 +229,7 @@ public class Enemy extends Base implements Runnable {
 						break;
 					}
 				}
+				// Moving the enemy down in the maze
 				if(nextPath.getRow() == (getRowPos() + 1)){
 					if (isValidMove(getRowPos() + 1, getColPos())){
 						setRowPos(getRowPos() + 1);
@@ -217,6 +237,7 @@ public class Enemy extends Base implements Runnable {
 						break;
 					}
 				}
+				// Moving the enemy left in the maze
 				if(nextPath.getCol() == (getColPos() - 1)){
 					if (isValidMove(getRowPos(), getColPos() - 1)){
 						setColPos(getColPos() - 1);
@@ -224,12 +245,29 @@ public class Enemy extends Base implements Runnable {
 						break;
 					}
 				}
+				// Moving the enemy right in the maze
 				if(nextPath.getCol() == (getColPos() + 1)){
 					if (isValidMove(getRowPos(), getColPos() + 1)){
 						setColPos(getColPos() + 1);
 						foundNextPath = true;
 						break;
 					}
+				}
+				
+				/*
+				 * There is a chance of the enemy getting stuck in the maze
+				 * This check condition handles the problem
+				 */
+				if(!foundNextPath){
+					checkMove(new Random().nextInt((3 - 0) + 1) + 0);
+				}
+				
+				/*
+				 * If the game is already over then stop moving and break loop
+				 */
+				if(this.getHealth() <= 0 || getPlayer().isGameOver()){
+					setRun(false);
+					break;
 				}
 			}
 		}

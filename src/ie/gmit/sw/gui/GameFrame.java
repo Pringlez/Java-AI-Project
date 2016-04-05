@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -37,7 +38,6 @@ public class GameFrame implements KeyListener {
 	
 	public static final int MAZE_DIMENSION = 80;
 	private JFrame gameFrame;
-	private GameView gamePanel;
 	private JPanel coverPanel;
 	private JPanel leftPanel;
 	private JPanel rightPanel;
@@ -61,18 +61,27 @@ public class GameFrame implements KeyListener {
 	private JComboBox<String> gameDifficulty1;
 	private JComboBox<String> gameDifficulty2;
 	
-	// The game controller object instance
+	// The game controller object instance & game view panel
+	private GameView gamePanel;
 	private Game game;
 	
-	public GameFrame() throws Exception {
+	public GameFrame() {
 		setupFrame();
 	}
 	
 	/**
 	 * Setup of the window frame that surrounds the game
-	 * @throws Exception
 	 */
-	private void setupFrame() throws Exception {
+	private void setupFrame() {
+		newFrame();
+		setupCoverPanel();
+		gameFrame.repaint();
+	}
+	
+	/**
+	 * Creating a new window frame
+	 */
+	private void newFrame() {
 		gameFrame = new JFrame("Maze Game - AI Project - John Walsh");
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.addKeyListener(this);
@@ -82,10 +91,60 @@ public class GameFrame implements KeyListener {
 		gameFrame.setResizable(false);
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setVisible(true);
-		setupCoverPanel();
-		gameFrame.repaint();
 	}
 	
+	/**
+	 * Setup of the cover panel that greets the player when they first launch the game
+	 */
+	private void setupCoverPanel() {
+		// Setting up cover panel when game first starts
+		coverPanel = new JPanel();
+		coverPanel.setBounds(204, 0, 797, 670);
+		coverPanel.setBackground(Color.black);
+		coverPanel.setLayout(null);
+		gameFrame.getContentPane().add(coverPanel);
+		
+		BufferedImage myPicture = null;
+		try {
+			myPicture = ImageIO.read(new File("res/ai_maze_game.png"));
+		} catch (IOException error) {
+			System.out.println("Error - " + error);
+		}
+		JLabel lblNewLabel = new JLabel(new ImageIcon(myPicture));
+		lblNewLabel.setBounds(40, 200, 750, 100);
+		coverPanel.add(lblNewLabel);
+		
+		JLabel label = new JLabel("Difficulty:");
+		label.setForeground(Color.WHITE);
+		label.setFont(new Font("Serif", Font.BOLD, 24));
+		label.setBounds(307, 350, 126, 24);
+		coverPanel.add(label);
+		
+		gameDifficulty1 = new JComboBox<String>();
+		gameDifficulty1.setFont(new Font("Serif", Font.BOLD, 24));
+		gameDifficulty1.setBounds(435, 350, 120, 30);
+		gameDifficulty1.addItem("Easy");
+		gameDifficulty1.addItem("Normal");
+		gameDifficulty1.addItem("Hard");
+		gameDifficulty1.setSelectedIndex(1);
+		gameDifficulty1.setFocusable(false);
+		coverPanel.add(gameDifficulty1);
+		
+		JButton btnNewGame = new JButton("New Game");
+		btnNewGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				gameFrame.getContentPane().remove(coverPanel);
+				setupLeftPanel();
+				setupRightPanel();
+				initNewGame(gameDifficulty1.getSelectedItem().toString());
+			}
+		});
+		btnNewGame.setFont(new Font("Serif", Font.BOLD, 24));
+		btnNewGame.setBounds(332, 430, 211, 33);
+		btnNewGame.setFocusable(false);
+		coverPanel.add(btnNewGame);
+	}
+
 	/**
 	 * Setup of the left panel in the game window frame that contains labels and information for the player
 	 */
@@ -248,7 +307,7 @@ public class GameFrame implements KeyListener {
 	private void setupRightPanel(){
 		
 		rightPanel = new JPanel();
-		rightPanel.setBackground(Color.BLACK);
+		rightPanel.setBackground(Color.black);
 		rightPanel.setBounds(1000, 0, 194, 751);
 		gameFrame.getContentPane().add(rightPanel);
 		rightPanel.setLayout(null);
@@ -393,64 +452,16 @@ public class GameFrame implements KeyListener {
 	}
 	
 	/**
-	 * Setup of the cover panel that greets the player when they first launch the game
-	 * @throws IOException
-	 */
-	private void setupCoverPanel() throws IOException {
-		// Setting up cover panel when game first starts
-		coverPanel = new JPanel();
-		coverPanel.setBounds(204, 0, 797, 670);
-		coverPanel.setBackground(Color.black);
-		coverPanel.setLayout(null);
-		gameFrame.getContentPane().add(coverPanel);
-		
-		BufferedImage myPicture = ImageIO.read(new File("res/ai_maze_game.png"));
-		JLabel lblNewLabel = new JLabel(new ImageIcon(myPicture));
-		lblNewLabel.setBounds(40, 200, 750, 100);
-		coverPanel.add(lblNewLabel);
-		
-		JLabel label = new JLabel("Difficulty:");
-		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Serif", Font.BOLD, 24));
-		label.setBounds(307, 350, 126, 24);
-		coverPanel.add(label);
-		
-		gameDifficulty1 = new JComboBox<String>();
-		gameDifficulty1.setFont(new Font("Serif", Font.BOLD, 24));
-		gameDifficulty1.setBounds(435, 350, 120, 30);
-		gameDifficulty1.addItem("Easy");
-		gameDifficulty1.addItem("Normal");
-		gameDifficulty1.addItem("Hard");
-		gameDifficulty1.setSelectedIndex(1);
-		gameDifficulty1.setFocusable(false);
-		coverPanel.add(gameDifficulty1);
-		
-		JButton btnNewGame = new JButton("New Game");
-		btnNewGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				gameFrame.getContentPane().remove(coverPanel);
-				setupLeftPanel();
-				setupRightPanel();
-				initNewGame(gameDifficulty1.getSelectedItem().toString());
-			}
-		});
-		btnNewGame.setFont(new Font("Serif", Font.BOLD, 24));
-		btnNewGame.setBounds(332, 430, 211, 33);
-		btnNewGame.setFocusable(false);
-		coverPanel.add(btnNewGame);
-	}
-	
-	/**
 	 * Initializing the game to start
 	 * @param gameDifficulty
 	 */
 	private void initNewGame(String gameDifficulty) {
 		// Initializing the game, panel and killing old enemy threads if they exist
-		if(gamePanel != null)
-			gameFrame.getContentPane().remove(gamePanel);
-		
 		if(game != null)
 			game.killEnemyThreads();
+				
+		if(gamePanel != null)
+			gameFrame.getContentPane().remove(gamePanel);
 		
 		game = new Game();
 		
@@ -474,7 +485,7 @@ public class GameFrame implements KeyListener {
 		Node[][] maze = model.getMaze();
 		Player player = new Player(100, 100);
 		ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-		Dimension d = new Dimension(GameView.DEFAULT_VIEW_SIZE, GameView.DEFAULT_VIEW_SIZE);
+		Dimension d = new Dimension(800, 800);
 		
 		game.setModel(model);
 		game.setMaze(maze);
@@ -483,7 +494,7 @@ public class GameFrame implements KeyListener {
 		game.placePlayer(model.getGoalPos());
     	game.setupEnemies(gameDifficulty);
     	
-		gamePanel = new GameView(game.getMaze());
+		gamePanel = new GameView(game);
 		gamePanel.setBounds(204, 0, 800, 700);
     	gamePanel.setPreferredSize(d);
     	gamePanel.setMinimumSize(d);
@@ -497,41 +508,46 @@ public class GameFrame implements KeyListener {
 	 * Updates the UI information showing in the frame, both player info and enemy info
 	 */
 	private void updateStatsGUI(){
-		
-		calStepsToExit();
+		// Updating the GUI elements
 		lblCurScore.setText(Integer.toString(game.getPlayer().getScore()));
+		lblCurStepstoExit.setText(Integer.toString(calStepsToExit()));
 		lblCurSteps.setText(Integer.toString(game.getPlayer().getSteps()));
 		lblHealthPoints.setText(Integer.toString(game.getPlayer().getHealth()));
 		lblArmorPoints.setText(Integer.toString(game.getPlayer().getArmor()));
 		lblCurWeapon.setText(game.getPlayer().getWeapon());
 		lblCurWeaponStr.setText(Integer.toString(game.getPlayer().getWeaponStrength()));
 		lblCurSpecial.setText(Integer.toString(game.getPlayer().getSpecial()));
-		lblEnemiesAmount.setText(Integer.toString(game.getEnemies().size()));
 		
 		int commonCount = 0;
 		int bossCount = 0;
 		
 		for(int i = 0; i < game.getEnemies().size(); i++){
 			if(game.getEnemies().get(i).isBoss()){
-				bossCount++;
+				if(game.getEnemies().get(i).getHealth() > 0)
+					bossCount++;
 			}else{
-				commonCount++;
+				if(game.getEnemies().get(i).getHealth() > 0)
+					commonCount++;
 			}
 		}
 		
+		lblEnemiesAmount.setText(Integer.toString(bossCount + commonCount));
 		lblCommonAmount.setText(Integer.toString(commonCount));
 		lblBossesAmount.setText(Integer.toString(bossCount));
 		lblCurExits.setText(Integer.toString(1));
 		lblCurDifficulty.setText(gameDifficulty2.getSelectedItem().toString());
 	}
 	
-	
-	private void calStepsToExit(){
+	/**
+	 * Calculates the number of steps to the maze's exit goal
+	 * @return Return the amount of steps to exit
+	 */
+	private int calStepsToExit(){
 		//Calculating the step to the goal node
 		AStarTraversator traverse = new AStarTraversator(game.getModel().getGoalNode(), true);
 		traverse.traverse(game.getMaze(), game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos()]);
 		game.getPlayer().setStepsToExit(traverse.getStepsToExit());
-		lblCurStepstoExit.setText(Integer.toString(game.getPlayer().getStepsToExit()));
+		return game.getPlayer().getStepsToExit();
 	}
 	
 	/**
@@ -552,39 +568,36 @@ public class GameFrame implements KeyListener {
     	// Check here if the block is a bomb or weapon etc
         if (e.getKeyCode() == KeyEvent.VK_D && game.getPlayer().getColPos() < MAZE_DIMENSION - 1) {
         	if (isValidMove(game.getPlayer().getRowPos(), game.getPlayer().getColPos() + 1) && game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos() + 1].isWalkable()){
-        		GameView.player_state = 5;
+        		gamePanel.setPlayerState(5);
         		game.getPlayer().setColPos(game.getPlayer().getColPos() + 1);
         		game.getPlayer().setSteps(game.getPlayer().getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_A && game.getPlayer().getColPos() > 0) {
         	if (isValidMove(game.getPlayer().getRowPos(), game.getPlayer().getColPos() - 1) && game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos() - 1].isWalkable()){
-        		GameView.player_state = 16;
+        		gamePanel.setPlayerState(16);
         		game.getPlayer().setColPos(game.getPlayer().getColPos() - 1);
         		game.getPlayer().setSteps(game.getPlayer().getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_W && game.getPlayer().getRowPos() > 0) {
         	if (isValidMove(game.getPlayer().getRowPos() - 1, game.getPlayer().getColPos()) && game.getMaze()[game.getPlayer().getRowPos() - 1][game.getPlayer().getColPos()].isWalkable()){
-        		GameView.player_state = 5;
+        		gamePanel.setPlayerState(5);
         		game.getPlayer().setRowPos(game.getPlayer().getRowPos() - 1);
         		game.getPlayer().setSteps(game.getPlayer().getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_S && game.getPlayer().getRowPos() < MAZE_DIMENSION - 1) {
         	if (isValidMove(game.getPlayer().getRowPos() + 1, game.getPlayer().getColPos()) && game.getMaze()[game.getPlayer().getRowPos() + 1][game.getPlayer().getColPos()].isWalkable()){
-        		GameView.player_state = 5;
+        		gamePanel.setPlayerState(5);
         		game.getPlayer().setRowPos(game.getPlayer().getRowPos() + 1);
         		game.getPlayer().setSteps(game.getPlayer().getSteps() + 1);
         	}
         }else if (e.getKeyCode() == KeyEvent.VK_M){
         	gamePanel.toggleZoom();
         }else if (e.getKeyCode() == KeyEvent.VK_K){
+        	// If the player hasn't picked up any special pickup items then return
         	if(game.getPlayer().getSpecial() <= 0) return;
-        	// Creates a new search algorithm object to find the goal node
-    		//Traversator traverse = randomSearch(new Random().nextInt((7 - 0) + 1) + 0);
-    		Traversator traverse = randomSearch(0);
-        	// Calls the specific traverse method contained in the class instantiated
-        	//AStarTraversator traverse = new AStarTraversator(game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos()], false);
+        	// Creates a new search algorithm object to find the goal node, randomly
+    		Traversator traverse = randomSearch(new Random().nextInt((3 - 0) + 1) + 0);
         	traverse.traverse(game.getMaze(), game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos()]);
-        	//System.out.println("Search good?: " + traverse.isFoundGoal());
         	game.getPlayer().setSearchCount(game.getPlayer().getSearchCount() + 1);
         	game.getPlayer().setSpecial(game.getPlayer().getSpecial() - 1);
     	}
@@ -593,7 +606,7 @@ public class GameFrame implements KeyListener {
     }
     
     public void keyReleased(KeyEvent e) {
-    	GameView.player_state = 6;
+    	gamePanel.setPlayerState(6);
     }
     
 	public void keyTyped(KeyEvent e) {}
@@ -622,14 +635,14 @@ public class GameFrame implements KeyListener {
 					game.getPlayer().setWeapon("Sword");
 					game.getPlayer().setWeaponStrength(45);
 					game.getMaze()[r][c].setNodeType('X');
-					new PlaySound("res/power_up.wav");
+					PlaySound.play("res/power_up.wav");
 				}
 			return true;
 			case '?':
 				// Help me pick up, shows the player a possible route to the goal
 				game.getPlayer().setSpecial(game.getPlayer().getSpecial() + 1);
 				game.getMaze()[r][c].setNodeType('X');
-				new PlaySound("res/power_up.wav");
+				PlaySound.play("res/power_up.wav");
 			return true;
 			case 'B':
 				// A bomb pick up, very powerful bomb that kills enemies very well
@@ -637,7 +650,7 @@ public class GameFrame implements KeyListener {
 					game.getPlayer().setWeapon("Shotgun");
 					game.getPlayer().setWeaponStrength(65);
 					game.getMaze()[r][c].setNodeType('X');
-					new PlaySound("res/power_up.wav");
+					PlaySound.play("res/power_up.wav");
 				}
 			return true;
 			case 'H':
@@ -646,7 +659,7 @@ public class GameFrame implements KeyListener {
 					game.getPlayer().setWeapon("AK-47");
 					game.getPlayer().setWeaponStrength(85);
 					game.getMaze()[r][c].setNodeType('X');
-					new PlaySound("res/power_up.wav");
+					PlaySound.play("res/power_up.wav");
 				}
 			return true;
 			case 'M':
@@ -656,7 +669,7 @@ public class GameFrame implements KeyListener {
 					if(game.getPlayer().getHealth() > 100)
 						game.getPlayer().setHealth(100);
 					game.getMaze()[r][c].setNodeType('X');
-					new PlaySound("res/power_up.wav");
+					PlaySound.play("res/power_up.wav");
 				}
 			return true;
 			case 'A':
@@ -666,7 +679,7 @@ public class GameFrame implements KeyListener {
 					if(game.getPlayer().getArmor() > 100)
 						game.getPlayer().setArmor(100);
 					game.getMaze()[r][c].setNodeType('X');
-					new PlaySound("res/power_up.wav");
+					PlaySound.play("res/power_up.wav");
 				}
 			return true;
 			case 'T':
@@ -680,14 +693,14 @@ public class GameFrame implements KeyListener {
 				game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos()].setGoalNode(false);
 				game.getMaze()[r][c].setNodeType('Z');
 				game.getPlayer().setGameOver(true);
-				new PlaySound("res/win_game.wav");
+				PlaySound.play("res/win_game.wav");
 			return true;
 			case 'N':
 				if(!game.getPlayer().getWeapon().equals("Pipe Bomb")){
 					game.getPlayer().setWeapon("Pipe Bomb");
 					game.getPlayer().setWeaponStrength(100);
 					game.getMaze()[r][c].setNodeType('X');
-					new PlaySound("res/power_up.wav");
+					PlaySound.play("res/power_up.wav");
 				}
 			return true;
 			case 'E':
@@ -699,13 +712,13 @@ public class GameFrame implements KeyListener {
 					game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos()].setEnemyID(0);
 					game.getPlayer().setGameOver(true);
 					game.getMaze()[r][c].setNodeType('L');
-					new PlaySound("res/lose_game.wav");
+					PlaySound.play("res/lose_game.wav");
 					return false;
 				}else{
 					game.getEnemies().get(game.getMaze()[r][c].getEnemyID()).setHealth(0);
 					game.getMaze()[r][c].setNodeType('D');
 					game.getMaze()[r][c].setEnemyID(0);
-					new PlaySound("res/win_fight.wav");
+					PlaySound.play("res/win_fight.wav");
 					return false;
 				}
 			case 'F':
@@ -716,14 +729,14 @@ public class GameFrame implements KeyListener {
 					game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos()].setNodeType(' ');
 					game.getMaze()[game.getPlayer().getRowPos()][game.getPlayer().getColPos()].setEnemyID(0);
 					game.getPlayer().setGameOver(true);
-					game.getMaze()[r][c].setNodeType('L');
-					new PlaySound("res/lose_game.wav");
+					game.getMaze()[r][c].setNodeType('D');
+					PlaySound.play("res/lose_game.wav");
 					return false;
 				}else{
 					game.getEnemies().get(game.getMaze()[r][c].getEnemyID()).setHealth(0);
 					game.getMaze()[r][c].setNodeType('L');
 					game.getMaze()[r][c].setEnemyID(0);
-					new PlaySound("res/win_fight.wav");
+					PlaySound.play("res/win_fight.wav");
 					return false;
 				}
 			default:
@@ -737,20 +750,18 @@ public class GameFrame implements KeyListener {
 			case 0:
 				return new AStarTraversator(game.getModel().getGoalNode(), false);
 			case 1:
-				//return new BasicHillClimbingTraversator(model.getGoalNode());
-			case 2:
 				return new BeamTraversator(game.getModel().getGoalNode(), 50);
+			case 2:
+				return new BruteForceTraversator(true);
 			case 3:
 				return new BestFirstTraversator(game.getModel().getGoalNode());
 			case 4:
-				// Slight problem with this search, over writes blocks
-				return new BruteForceTraversator(true);
+				//return new BasicHillClimbingTraversator(game.getModel().getGoalNode());
 			case 5:
 				//return new DepthLimitedDFSTraversator(game.getMaze().length / 2);
 			case 6:
-				return new IDAStarTraversator(game.getModel().getGoalNode());
+				//return new IDAStarTraversator(game.getModel().getGoalNode());
 			case 7:
-				// Not working at the moment
 				//return new IDDFSTraversator();
 	    	default:
 	    		return new AStarTraversator(game.getModel().getGoalNode(), false);

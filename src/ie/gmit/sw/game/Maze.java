@@ -21,10 +21,10 @@ public class Maze {
 		buildMaze();
 		setGoalNode();
 		unvisit();
-		addFeature('M', 'X', 15);
-		addFeature('A', 'X', 15);
+		addFeature('M', 'X', 20);
+		addFeature('A', 'X', 20);
 		addFeature('W', 'X', 50);
-		addFeature('?', 'X', 30);
+		addFeature('?', 'X', 45);
 		addFeature('B', 'X', 30);
 		addFeature('H', 'X', 20);
 		addFeature('N', 'X', 10);

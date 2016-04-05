@@ -39,7 +39,7 @@ public class FuzzyBattle {
         fis.evaluate();
 
         Variable survivability = functionBlock.getVariable("survivability");
-        System.out.println("\nSurvivability Percentage: " + (int)survivability.getValue() + "%");
+        System.out.println("Survivability Percentage: " + (int)survivability.getValue() + "%\n");
         
         boolean enemyWon = false;
         
@@ -47,27 +47,31 @@ public class FuzzyBattle {
     	player.setArmor((int)(player.getArmor() - (100 - survivability.getValue() + 10)));
     	player.setWeaponStrength((int)(player.getWeaponStrength() * (survivability.getValue() / 100)));
     	
-    	if(!player.getWeapon().equals("Sword") || player.getWeaponStrength() < 35){
+    	// If the weapon was damaged enough then destroy the weapon
+    	if(player.getWeaponStrength() < 35){
     		player.setWeaponStrength(0);
     		player.setWeapon("Unarmed");
     	}
         
+    	// Checking armor
     	if(player.getArmor() <= 0){
         	player.setArmor(0);
         }
     	
+    	// Checking health below zero, if true then the game is over
         if(player.getHealth() <= 0){
         	player.setHealth(0);
         	player.setGameOver(true);
         	System.out.println("Game Over!");
-        	System.out.println("Player Score: " + player.getScore());
+        	System.out.println("Player Score: " + player.getScore() + "\n");
         	enemyWon = true;
         }
         
+        // If the player wins the fight then update the player object variables
         if(!enemyWon){
         	player.setScore(player.getScore() + 25);
         	System.out.println("Player Health: " + player.getHealth());
-        	System.out.println("Player Armor: " + player.getArmor());
+        	System.out.println("Player Armor: " + player.getArmor() + "\n");
         }
         
 		return enemyWon;

@@ -17,7 +17,7 @@ public class BestFirstTraversator extends Utility implements Traversator {
 	}
 	
 	public void traverse(Node[][] maze, Node node){
-		System.out.println("\nUsing Best First Traversator to find goal!");
+		System.out.println("Using Best First Traversator - Looking for Maze Exit Goal!\n");
 		unvisitA(maze);
 		LinkedList<Node> queue = new LinkedList<Node>();
 		queue.addFirst(node);
@@ -30,7 +30,7 @@ public class BestFirstTraversator extends Utility implements Traversator {
 			node.setVisited(true);	
 			visitCount++;
 			
-			if (node.isGoalNode()){
+			if (node.isGoalNode() && node.nodeType != 'P'){
 		        time = System.currentTimeMillis() - time; //Stop the clock
 		        TraversatorStats.printStats(node, time, visitCount, false);
 				break;

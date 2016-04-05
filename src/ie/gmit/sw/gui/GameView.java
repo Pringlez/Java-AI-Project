@@ -9,37 +9,46 @@ import javax.imageio.*;
 import javax.swing.*;
 
 import ie.gmit.sw.ai.Node;
+import ie.gmit.sw.game.Game;
 
 /**  
 * GameView.java - The game view class handles all the image manipulation and drawing
 * @author John Walsh
 * @version 1.0
 */
+
 public class GameView extends JPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
-	private static final int IMAGE_COUNT = 20;
-	public static final int DEFAULT_VIEW_SIZE = 800;
-	public static int player_state = 6;
-	private int cellspan = 5;	
-	private int cellpadding = 2;
-	private Node[][] maze;
-	private BufferedImage[] images;
-	private int enemy_state = 7;
-	private int enemy_boss_state = 18;
-	private Timer timer;
+	private int cellspan;	
+	private int cellpadding;
 	private int currentRow;
 	private int currentCol;
-	private boolean zoomOut = false;
-	private int imageIndex = -1;
+	private boolean zoomOut;
+	private int imageIndex;
+	private int playerState;
+	private int enemyState;
+	private int enemyBossState;
+	private Node[][] maze;
+	private BufferedImage[] images;
+	private Timer timer;
 	
-	public GameView(Node[][] maze) {
+	public GameView() {
+	}
+	
+	public GameView(Game game) {
 		init();
-		this.maze = maze;
+		this.maze = game.getMaze();
+		this.imageIndex = -1;
+		this.playerState = 6;
+		this.enemyState = 7;
+		this.enemyBossState = 18;
+		this.cellspan = 5;
+		this.cellpadding = 2;
+		this.timer = new Timer(100, this);
+		this.timer.start();
 		setBackground(Color.LIGHT_GRAY);
 		setDoubleBuffered(true);
-		timer = new Timer(100, this);
-		timer.start();
 	}
 	
 	public void setCurrentRow(int row) {
@@ -67,8 +76,8 @@ public class GameView extends JPanel implements ActionListener {
         Graphics2D g2 = (Graphics2D)g;
               
         cellspan = zoomOut ? maze.length : 5;         
-        final int size = DEFAULT_VIEW_SIZE/cellspan;
-        g2.drawRect(0, 0, GameView.DEFAULT_VIEW_SIZE, GameView.DEFAULT_VIEW_SIZE);
+        final int size = 800 / cellspan;
+        g2.drawRect(0, 0, 800, 800);
         
         for(int row = 0; row < cellspan; row++) {
         	for (int col = 0; col < cellspan; col++){  
@@ -117,10 +126,10 @@ public class GameView extends JPanel implements ActionListener {
 	        			imageIndex = 4;
             		break;
 	        		case 'E':
-	        			imageIndex = enemy_state;
+	        			imageIndex = enemyState;
             		break;
 	        		case 'F':
-	        			imageIndex = enemy_boss_state;
+	        			imageIndex = enemyBossState;
             		break;
 	        		case 'D':
 	        			imageIndex = 9;
@@ -135,7 +144,7 @@ public class GameView extends JPanel implements ActionListener {
 	        			imageIndex = 12;
 	            	break;
 	        		case 'P':
-	        			imageIndex = player_state;
+	        			imageIndex = playerState;
 	            	break;
 	        		case 'G':
 	        			imageIndex = 13;
@@ -184,16 +193,17 @@ public class GameView extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (enemy_state < 0 || enemy_state == 7){
-			enemy_state = 8;
+		// Updating the state of the enemy's images
+		if (enemyState < 0 || enemyState == 7){
+			enemyState = 8;
 		}else{
-			enemy_state = 7;
+			enemyState = 7;
 		}
 		
-		if (enemy_boss_state < 0 || enemy_boss_state == 18){
-			enemy_boss_state = 19;
+		if (enemyBossState < 0 || enemyBossState == 18){
+			enemyBossState = 19;
 		}else{
-			enemy_boss_state = 18;
+			enemyBossState = 18;
 		}
 		
 		if(e.getSource() == timer){
@@ -203,7 +213,7 @@ public class GameView extends JPanel implements ActionListener {
 	
 	private void init() {
 		// Initializing the images
-		images = new BufferedImage[IMAGE_COUNT];
+		images = new BufferedImage[20];
 		try {
 			images[0] = ImageIO.read(new java.io.File("res/hedge.png"));
 			images[1] = ImageIO.read(new java.io.File("res/sword.png"));		
@@ -228,5 +238,13 @@ public class GameView extends JPanel implements ActionListener {
 		} catch (IOException error) {
 			System.out.println("Error - " + error);
 		}
+	}
+
+	public int getPlayerState() {
+		return playerState;
+	}
+
+	public void setPlayerState(int playerState) {
+		this.playerState = playerState;
 	}
 }

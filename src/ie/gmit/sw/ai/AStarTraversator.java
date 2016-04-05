@@ -30,12 +30,14 @@ public class AStarTraversator extends Utility implements Traversator {
 	
 	public void traverse(Node[][] maze, Node node){
 		if(!countSteps && !enemySearch){
-			System.out.println("\nUsing A Star Traversator - Looking for maze exit!");
+			// When the player uses a special pickup item to find the shortest path
+			System.out.println("Using A Star Traversator - Looking for Maze Exit Goal!\n");
 			unvisitA(maze);
 		}else if(enemySearch){
-			System.out.println("\nUsing A Star Traversator - Enemy is looking for player!");
+			// When the enemy is actively searching for the player
 			unvisitB(maze);
 		}else{
+			// When the game is computing the amount of steps to the exit point
 			unvisitB(maze);
 		}
 		
@@ -53,6 +55,7 @@ public class AStarTraversator extends Utility implements Traversator {
 			node.setVisited(true);
 			visitCount++;
 			
+			// When counting for steps to the goal or displaying path to goal node
 			if (node.isGoalNode() && node.getNodeType() != 'P' && !enemySearch){
 		        time = System.currentTimeMillis() - time; //Stop the clock
 		        setStepsToExit(TraversatorStats.printStats(node, time, visitCount, countSteps));

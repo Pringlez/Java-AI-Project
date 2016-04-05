@@ -101,7 +101,7 @@ public class Game {
 				armor = random.nextInt((35 - 5) + 1) + 5;
 				strength = random.nextInt((60 - 30) + 1) + 30;
 				difficulty = 0;
-				bosses = 1;
+				bosses = 3;
 			break;
 			case "Normal":
 				amount = 50;
@@ -109,15 +109,15 @@ public class Game {
 				armor = random.nextInt((45 - 25) + 1) + 25;
 				strength = random.nextInt((70 - 30) + 1) + 30;
 				difficulty = 1;
-				bosses = 2;
+				bosses = 5;
 			break;
 			case "Hard":
-				amount = 75;
+				amount = 65;
 				health = random.nextInt((100 - 40) + 1) + 40;
 				armor = random.nextInt((75 - 50) + 1) + 50;
 				strength = random.nextInt((80 - 30) + 1) + 30;
 				difficulty = 2;
-				bosses = 5;
+				bosses = 10;
 			break;
 			default:
 				amount = 50;
@@ -125,7 +125,7 @@ public class Game {
 				armor = random.nextInt((45 - 25) + 1) + 25;
 				strength = random.nextInt((70 - 30) + 1) + 30;
 				difficulty = 1;
-				bosses = 2;
+				bosses = 5;
 			break;
 		}
 		
@@ -138,6 +138,10 @@ public class Game {
 			
 			if(bosses > 0){
 				isBoss = true;
+				health = 100;
+				armor = 100;
+				strength = 1000;
+				difficulty = 5;
 				bosses--;
 			}
 			
