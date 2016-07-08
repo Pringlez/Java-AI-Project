@@ -21,7 +21,7 @@ Note: Make sure to include both the 'fcl' & 'res' folders when running the game.
 
 How to Play
 -----------
-Pick a difficulty setting and press the play button to begin.
+Pick a difficulty setting and press the play button to start the game.
 
 How to control the game character:
 
@@ -80,7 +80,7 @@ The helper item will display the path to the maze's exit, note that enemies can 
 ![alt text](/res/help.png "Helper Item")
 
 ### Game Features
-Details about the different features implemented into the game.
+Details about the different features implemented into the game, from the weapons to the enemies encountered in the maze.
 #### Steps Counter
 The game features a special step counter that display how many steps the player will need to take until the goal is reached, this re-computes every time the player moves position. The A* search algorithm is used to compute this variable.
 
